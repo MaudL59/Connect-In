@@ -1,10 +1,44 @@
 <?php
-
+// LikeController.php
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Like;
 
 class LikeController extends Controller
 {
-    //
+    
+     // Fonction de sauvegarde du like
+      public function save(request $request) {
+        $user_id = auth()->id();
+        $post_id = $request->input('post_id');
+        
+
+        Like::create([
+            'user_id' => $user_id, 
+            'post_id' => $post_id]);
+        return response()->json(['message' => 'C\'est Liké!'], 201);
+        // erreur 201 est Quand un utilisateur poste un Commentaire ou un Like.
+    }
+    // Fonction de supression du like
+     public function delete($id) {
+        $like = Like::find($id);
+
+        // Vérifie si le like existe (pour éviter un crash)
+        if (!$like) {
+            return response()->json(['message' => 'Like introuvable'], 404);
+            // erreur 404 Si on cherche un like qui n'existe plus.
+        }
+
+        if ($like->user_id !== auth()->id()) {
+        return response()->json(['message' => 'Attention tu essais de suprimmer le like d\'un autre utilisateur'], 403);
+        // erreur 403 est Si un utilisateur tente de supprimer le like d'un autre.
+        }
+         $like->delete(); 
+         
+        
+        return response()->json(['message' => 'Like supprimé avec succès !'], 200);
+    }
+        // 200 = Succès 
 }
+
