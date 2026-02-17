@@ -9,7 +9,7 @@ class CommentController extends Controller
 {
     // Fonction de sauvegarde du commentaire
     public function save(request $request) {
-        $user_id = auth()->id();
+        $user_id = auth()-> id ();
         $post_id = $request->input('post_id');
         $content = $request->input('content');
         

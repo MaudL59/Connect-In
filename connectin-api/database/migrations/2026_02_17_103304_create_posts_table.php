@@ -13,6 +13,18 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+            
+            // Le contenu du post (le texte que l'utilisateur écrit)
+            $table->text('content');
+            
+            // Optionnel : un titre pour le post
+            $table->string('title')->nullable(); 
+
+            // LA RELATION : Lien vers l'utilisateur qui publie
+            // constrained() cherche automatiquement la table 'users'
+            // onDelete('cascade') supprime les posts si l'utilisateur est supprimé
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+
             $table->timestamps();
         });
     }
@@ -25,3 +37,4 @@ return new class extends Migration
         Schema::dropIfExists('posts');
     }
 };
+?>

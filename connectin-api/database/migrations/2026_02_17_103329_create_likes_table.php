@@ -13,7 +13,17 @@ return new class extends Migration
     {
         Schema::create('likes', function (Blueprint $table) {
             $table->id();
+            
+            // L'utilisateur qui donne le like
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            
+            // Le post qui reçoit le like
+            $table->foreignId('post_id')->constrained()->onDelete('cascade');
+            
             $table->timestamps();
+
+            // CETTE LIGNE : Empêche de liker plus d'une fois le même post
+            $table->unique(['user_id', 'post_id']);
         });
     }
 
@@ -25,3 +35,4 @@ return new class extends Migration
         Schema::dropIfExists('likes');
     }
 };
+?>
