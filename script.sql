@@ -1,0 +1,45 @@
+CREATE TABLE IF NOT EXISTS users(
+    id BIGINT AUTO_INCREMENT,
+   user_name VARCHAR(255) NOT NULL UNIQUE,
+   email VARCHAR(255) NOT NULL UNIQUE,
+   password  VARCHAR(255) NOT NULL,
+   is_connected TINYINT(1) DEFAULT 0,
+   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+   PRIMARY KEY(id)
+);
+
+
+CREATE TABLE IF NOT EXISTS posts (
+    id BIGINT AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    content TEXT,
+    image_path VARCHAR(255) NULL,
+    created_at	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,	
+    updated_at	TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE, -- suppresion automatique si l'user part--
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS comments(
+    id BIGINT AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    post_id BIGINT NOT NULL,
+    content TEXT NOT NULL,
+    created_at	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,	
+    updated_at	TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY(post_id) REFERENCES posts(id) ON DELETE CASCADE, -- Suppression auto si le post est effacé
+    PRIMARY KEY(id)
+
+);
+
+CREATE TABLE IF NOT EXISTS likes (
+    id BIGINT AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    post_id BIGINT NOT NULL,
+    PRIMARY KEY(id),
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY(post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    UNIQUE KEY user_post_unique (user_id, post_id) -- Empêche le double like
+);
