@@ -11,7 +11,7 @@ use Carbon\Carbon; // Gestion date et heure
 
 class PostController extends Controller
 {   
-    public function __construct()
+    public function __construct(private PostRepositoryInterface $posts)
     {
         // Permet d'afficher les dates en français
         // Exemple : "il y a 2 minutes", "15 février 2025"
