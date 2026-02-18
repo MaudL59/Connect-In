@@ -10,20 +10,36 @@ use Illuminate\Support\Facades\Auth; // On ajoute ça pour aider l'IDE
 class LikeController extends Controller
 {
     
-     // Fonction de sauvegarde du like
-      public function save(request $request) {
-        $user_id = Auth::id();
-        $post_id = $request->input('post_id');
+    // Fonction de sauvegarde et de supression du like
+    public function save(Request $request) {
         
 
+        $request->validate([
+        'post_id' => 'required|exists:posts,id', 
+        ]);
+
+        $user_id = Auth::id();
+        $post_id = $request->input('post_id');
+
+        $existingLike = Like::where([
+            'user_id' => $user_id, 
+            'post_id' => $post_id])->first();
+
+        if ($existingLike) {
+            $existingLike->delete();
+            return response()->json(['message' => 'Like retiré'], 200);
+        // 200 code de succés 
+        }    
         Like::create([
             'user_id' => $user_id, 
             'post_id' => $post_id]);
         return response()->json(['message' => 'C\'est Liké!'], 201);
         // erreur 201 est Quand un utilisateur poste un Commentaire ou un Like.
-    }
+        }
+
+
     // Fonction de supression du like
-     public function delete($id) {
+    public function delete($id) {
         $like = Like::find($id);
 
         // Vérifie si le like existe (pour éviter un crash)
