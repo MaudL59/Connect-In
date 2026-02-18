@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Auth; // On ajoute ça pour aider l'IDE
 
+
 class CommentController extends Controller
 {
     // Fonction de sauvegarde du commentaire
