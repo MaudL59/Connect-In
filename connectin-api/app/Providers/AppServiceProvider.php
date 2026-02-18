@@ -9,7 +9,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void //
+    public function register(): void // cette fonction joue le role de pont entre Interface et Repositories
     {
     $this->app->bind(\App\Interfaces\UserRepositoryInterface::class, \App\Repositories\UserRepository::class);
     $this->app->bind(\App\Interfaces\PostRepositoryInterface::class, \App\Repositories\PostRepository::class);
@@ -19,8 +19,13 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    public function boot(): void // cette fonction permet à l'utilisation de supprimer que ces propres posts
     {
-        //
+        
+        Gate::define('update-post', function ($user, $post) {
+        return $user->id === $post->user_id;
+    });
+    //  Afficher les dates en français (ex: "il y a 2 minutes")
+        Carbon::setLocale('fr');
     }
 }
