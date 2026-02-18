@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Comment;
+use Illuminate\Support\Facades\Auth; // On ajoute ça pour aider l'IDE
 
 class CommentController extends Controller
 {
     // Fonction de sauvegarde du commentaire
-    public function save(request $request) {
-        $user_id = auth()-> id ();
+    public function save(Request $request) {
+       $user_id = Auth::id();
         $post_id = $request->input('post_id');
         $content = $request->input('content');
         
@@ -32,13 +33,13 @@ class CommentController extends Controller
             // erreur 404Si on cherche un commentaire qui n'existe plus.
         }
 
-        if ($comment->user_id !== auth()->id()) {
+        if ($comment->user_id !== Auth::id()) {
         return response()->json(['message' => 'Attention tu essais de suprimmer le commentaire d\'un autre utilisateur'], 403);
         // erreur 403 est Si un utilisateur tente de supprimer le post d'un autre.
         }
          $comment->delete(); 
          
-        if ($comment->user_id == auth()->id()) {
+        if ($comment->user_id == Auth::id()) {
         return response()->json(['message' => 'Commentaire suprimé avec succé!'], 200);
         // 200 = Succès 
         }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             
             // L'utilisateur qui donne le like
+            // clef étranger
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             
             // Le post qui reçoit le like

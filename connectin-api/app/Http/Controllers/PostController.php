@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use Illuminate\Support\Facades\Auth; // On ajoute ça pour aider l'IDE
+
 
 class PostController extends Controller
 {
     // Fonction de sauvegarde du post
     public function save(request $request) {
-        $user_id = auth()->id();
+        $user_id = Auth::id();
         $content = $request->input('content');
         $image_path = $request->input('image_path');
         
@@ -33,7 +35,7 @@ class PostController extends Controller
             // erreur 404 Si on cherche un post qui n'existe plus.
         }
 
-        if ($post->user_id !== auth()->id()) {
+        if ($post->user_id !== Auth::id()) {
         return response()->json(['message' => 'Attention tu essais de suprimmer le post d\'un autre utilisateur'], 403);
         // erreur 403 est Si un utilisateur tente de supprimer le post d'un autre.
         }

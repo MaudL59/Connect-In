@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Like;
+use Illuminate\Support\Facades\Auth; // On ajoute ça pour aider l'IDE
+
 
 class LikeController extends Controller
 {
     
      // Fonction de sauvegarde du like
       public function save(request $request) {
-        $user_id = auth()->id();
+        $user_id = Auth::id();
         $post_id = $request->input('post_id');
         
 
@@ -30,7 +32,7 @@ class LikeController extends Controller
             // erreur 404 Si on cherche un like qui n'existe plus.
         }
 
-        if ($like->user_id !== auth()->id()) {
+        if ($like->user_id !== Auth::id()) {
         return response()->json(['message' => 'Attention tu essais de suprimmer le like d\'un autre utilisateur'], 403);
         // erreur 403 est Si un utilisateur tente de supprimer le like d'un autre.
         }

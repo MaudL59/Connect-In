@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth; // On ajoute ça pour aider l'IDE
+
 
 class UserController extends Controller
 {
@@ -33,7 +35,7 @@ class UserController extends Controller
             
 
         //  si un utilisaseur tente de modifier le profil d'un autre
-        if (auth()->id() !== (int)$id) { 
+        if (Auth::id() !== (int)$id) { 
              return response()->json(['message' => 'C\'est le profil d\'un autre utilisateur'], 403);
            
         }
@@ -66,7 +68,7 @@ class UserController extends Controller
         }
 
         //  si un utilisaseur tente de suprimer le profil d'un autre on vérifie que c'est bien SON profil
-        if (auth()->id() !== (int)$id) { 
+        if (Auth::id() !== (int)$id) { 
              return response()->json(['message' => 'C\'est le profil d\'un autre utilisateur'], 403);
            
         }
