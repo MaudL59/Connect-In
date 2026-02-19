@@ -32,20 +32,25 @@ Route::middleware('auth:sanctum')-> group(function(){
     Route::post('/logout', [AuthentificationController::class, 'logout']);
 
     // pour les utilisateurs
+    Route::post('/users', [UserController::class, 'add']);
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::put('/users/{id}', [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'delete']);
+    
 
     // pour les posts
     Route::post('/posts', [PostController::class, 'save']);
+    Route::get('/posts', [PostController::class, 'index']);
     Route::delete('/posts/{id}', [PostController::class, 'delete']);
 
     // pour les commentaires
     Route::post('/comments', [CommentController::class, 'save']);
     Route::delete('/comments/{id}', [CommentController::class, 'delete']);
+    Route::get('/comments',[CommentController::class,'index']);
 
     // pour les likes
     Route::post('/likes', [LikeController::class, 'save']);
     Route::delete('/likes/{id}', [LikeController::class, 'delete']);
+    Route::get('/likes',[LikeController::class,'index']);
 
 });
