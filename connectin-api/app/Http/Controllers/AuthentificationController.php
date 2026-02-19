@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use App\Interfaces\UserRepositoryInterface;
 
 class AuthentificationController extends Controller
 {
+    public function __construct(private UserRepositoryInterface $users)
+    {
+    }
+
     // création d'un nouveau utilisateur
     public function register(Request $request){
         // validation de l'utilisateur
@@ -20,7 +24,7 @@ class AuthentificationController extends Controller
         ]);
 
         // creation d'utilisateur
-        $user = User::create([
+        $user = $this->users->create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
@@ -45,7 +49,7 @@ class AuthentificationController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-        $user = User::where('email', $request->email)->first();
+        $user = $this->users->findByEmail($request->email);
 
         if (!$user || !Hash::check($request->password, $user->password)) {
         return response()->json([
