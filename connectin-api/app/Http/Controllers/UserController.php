@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth; // On ajoute ça pour aider l'IDE
+use App\Interfaces\UserRepositoryInterface;
 
 
 class UserController extends Controller
 {
+    public function __construct(private UserRepositoryInterface $users)
+    {
+    }
+
     // permettre à n'importe quel utilisateur de voir le profil d'un autre membre
     public function show($id){
-        $user = User::find($id);
+        $user = $this->users->find($id);
 
         if(!$user){
             return response()->json(['message' => 'Utilisateur introuvable'], 404);
@@ -26,7 +30,7 @@ class UserController extends Controller
     // permet à l'utilisateur de modifier son profil
     public function update(Request $request, $id){
 
-        $user = User::find($id);
+        $user = $this->users->find($id);
         // on recherche l'utilisateur
         if(!$user){
             return response()->json(['message' => 'Utilisateur introuvable'], 404);
@@ -51,14 +55,14 @@ class UserController extends Controller
             $data['password'] = bcrypt($request->input('password'));
         }
         // mise a jour du profil
-        $user->update($data);
+        $this->users->update($id, $data);
 
         return response()->json(['message' => 'Profil mis à jour !'], 200); 
         // 200 = succés
     }
 
     public function delete(Request $request, $id) {
-        $user = User::find($id);
+        $user = $this->users->find($id);
 
 
         // on recherche l'utilisateur
@@ -83,14 +87,14 @@ class UserController extends Controller
             // CAS 1 : On supprime tous, le profil, les posts et les commentaires
             $user->posts()->delete();
             $user->comments()->delete();
-            $user->delete();
+            $this->users->delete($id);
             return response()->json(['message' => 'Compte et contenus associés supprimés'], 200);
         } else {
             // CAS 2 : On met en anonyme les posts et les commentaires
             $user->posts()->update(['content' => "Utilisateur suprimé"]);
             
 
-            $user->delete();
+            $this->users->delete($id);
             
             return response()->json(['message' => 'Compte anonymisé, contenus conservés'], 200);
     }

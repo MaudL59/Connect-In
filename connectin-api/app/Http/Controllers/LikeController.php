@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Like;
 use Illuminate\Support\Facades\Auth; // On ajoute ça pour aider l'IDE
+use App\Interfaces\LikeRepositoryInterface;
 
 
 class LikeController extends Controller
 {
     
+    public function __construct(private LikeRepositoryInterface $likes)
+{
+}
+
     // Fonction de sauvegarde et de supression du like
     public function save(Request $request) {
         
@@ -26,11 +30,12 @@ class LikeController extends Controller
             'post_id' => $post_id])->first();
 
         if ($existingLike) {
-            $existingLike->delete();
+            $this->likes->deleteSpecific($post_id, $user_id);
             return response()->json(['message' => 'Like retiré'], 200);
         // 200 code de succés 
         }    
-        Like::create([
+
+        $this->likes->create([
             'user_id' => $user_id, 
             'post_id' => $post_id]);
         return response()->json(['message' => 'C\'est Liké!'], 201);
@@ -40,7 +45,7 @@ class LikeController extends Controller
 
     // Fonction de supression du like
     public function delete($id) {
-        $like = Like::find($id);
+        $this->likes->find($id);
 
         // Vérifie si le like existe (pour éviter un crash)
         if (!$like) {
@@ -52,7 +57,7 @@ class LikeController extends Controller
         return response()->json(['message' => 'Attention tu essais de suprimmer le like d\'un autre utilisateur'], 403);
         // erreur 403 est Si un utilisateur tente de supprimer le like d'un autre.
         }
-         $like->delete(); 
+        $this->likes->delete($id); 
          
         
         return response()->json(['message' => 'Like supprimé avec succès !'], 200);
