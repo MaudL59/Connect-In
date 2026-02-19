@@ -12,7 +12,34 @@ class UserController extends Controller
     public function __construct(private UserRepositoryInterface $users)
     {
     }
+    // Inscription d'un nouvel utilisateur
+    public function add(Request $request) {
+        
+        // 1. Validation stricte des données
+        $validated = $request->validate([
+            'first_name' => 'required|string',
+            'last_name'  => 'required|string',
+            'email'      => 'required|email|unique:users,email', // Vérifie que l'email n'existe pas déjà
+            'password'   => 'required|string|confirmed',   // Nécessite un champ password_confirmation
+        ]);
 
+        // 2. Création de l'utilisateur via le Repository
+        $user = $this->users->create([
+            'first_name' => $validated['first_name'],
+            'last_name'  => $validated['last_name'],
+            'email'      => $validated['email'],
+            'password'   => bcrypt($validated['password']), // Toujours crypter le mot de passe !
+        ]);
+
+        // 3. Réponse
+        return response()->json([
+            'message' => 'Bienvenue parmi nous ! Ton compte a été créé.',
+            'user'    => [
+                'id'    => $user->id,
+                'email' => $user->email
+            ]
+        ], 201); // 201 = Créé avec succès
+    }
     // permettre à n'importe quel utilisateur de voir le profil d'un autre membre
     public function show($id){
         $user = $this->users->find($id);

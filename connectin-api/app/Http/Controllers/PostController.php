@@ -19,6 +19,32 @@ class PostController extends Controller
         Carbon::setLocale('fr');
     }
 
+    public function add(Request $request) {
+        
+        // 1. Validation : On vérifie que le contenu n'est pas vide
+        $validated = $request->validate([
+            'content' => 'required|string', // Limite style 
+            'image_path' => 'nullable|string'       // L'image est optionnelle
+        ]);
+
+        // 2. Récupération de l'ID de l'utilisateur connecté
+        $user_id = Auth::id();
+
+        // 3. Création via le Repository
+        $post = $this->posts->create([
+            'user_id' => $user_id,
+            'content' => $validated['content'],
+            'image_path' => $validated['image_path'] ?? null
+        ]);
+
+        // 4. Réponse au format JSON
+        return response()->json([
+            'message' => 'Post ajouté avec succès !',
+            'post' => $post,
+            'human_date' => Carbon::parse($post->created_at)->diffForHumans()
+        ], 201); // 201 = Création réussie
+    }
+
     // Fonction de sauvegarde du post
     public function save(Request $request) {
 

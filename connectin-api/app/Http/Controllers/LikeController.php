@@ -13,7 +13,21 @@ class LikeController extends Controller
     
     public function __construct(private LikeRepositoryInterface $likes)
 {
-}
+}   // Liste tous les likes d'un post spécifique
+    public function index($post_id) {
+        // On récupère tous les likes liés à ce post
+        // On peut charger les infos de l'utilisateur avec (si défini dans le repo)
+        $allLikes = $this->likes->findByPost($post_id);
+
+        if ($allLikes->isEmpty()) {
+            return response()->json(['message' => 'Aucun like pour ce post'], 200);
+        }
+
+        return response()->json([
+            'count' => $allLikes->count(),
+            'likes' => $allLikes
+        ], 200);
+    }
 
     // Fonction de sauvegarde et de supression du like
     public function save(Request $request) {

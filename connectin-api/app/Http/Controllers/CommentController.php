@@ -11,6 +11,40 @@ class CommentController extends Controller
 {
     public function __construct(private CommentRepositoryInterface $comments) {}
 
+    // Afficher tous les commentaires d'un post
+    public function index($post_id) {
+        $allComments = $this->comments->findByPost($post_id);
+        
+        return response()->json($allComments, 200);
+    }
+
+    // Modifier un commentaire existant
+    public function update(Request $request, $id) {
+        $comment = $this->comments->find($id);
+
+        // 1. Vérification d'existence
+        if (!$comment) {
+            return response()->json(['message' => 'Commentaire introuvable'], 404);
+        }
+
+        // 2. Vérification d'autorisation (Seul l'auteur peut modifier)
+        if ($comment->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Modification interdite'], 403);
+        }
+
+        // 3. Validation du nouveau contenu
+        $validated = $request->validate([
+            'content' => 'required|string|max:500'
+        ]);
+
+        // 4. Mise à jour
+        $this->comments->update($id, [
+            'content' => $validated['content']
+        ]);
+
+        return response()->json(['message' => 'Commentaire modifié !'], 200);
+    }
+
     // Fonction de sauvegarde du commentaire
     public function save(Request $request) {
        $user_id = Auth::id();
