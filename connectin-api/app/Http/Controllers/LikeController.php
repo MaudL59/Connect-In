@@ -17,7 +17,8 @@ class LikeController extends Controller
     public function index($post_id) {
         // On récupère tous les likes liés à ce post
         // On peut charger les infos de l'utilisateur avec (si défini dans le repo)
-        $allLikes = $this->likes->findByPost($post_id);
+        
+        $allLikes = $this->likes->getByPost($post_id);
 
         if ($allLikes->isEmpty()) {
             return response()->json(['message' => 'Aucun like pour ce post'], 200);

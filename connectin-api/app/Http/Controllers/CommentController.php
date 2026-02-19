@@ -13,7 +13,7 @@ class CommentController extends Controller
 
     // Afficher tous les commentaires d'un post
     public function index($post_id) {
-        $allComments = $this->comments->findByPost($post_id);
+        $allComments = $this->comments->getByPost($post_id);
         
         return response()->json($allComments, 200);
     }
