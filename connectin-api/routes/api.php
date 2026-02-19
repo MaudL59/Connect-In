@@ -1,4 +1,5 @@
 <?php
+// api.php
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -6,6 +7,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthentificationController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -19,8 +21,15 @@ Route::get('/ping', function () {
     ]);
 });
 
+// pour l'authentifiction de l'utilisateur
+Route::post('/register', [AuthentificationController::class, 'register']);
+Route::post('/login', [AuthentificationController::class, 'login']);
+
 // routes vers les fonctions des controllers
 Route::middleware('auth:sanctum')-> group(function(){
+
+    // pour l'authentification   
+    Route::post('/logout', [AuthentificationController::class, 'logout']);
 
     // pour les utilisateurs
     Route::get('/users/{id}', [UserController::class, 'show']);

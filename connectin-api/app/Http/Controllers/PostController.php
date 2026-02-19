@@ -8,6 +8,7 @@ use App\Models\Post;
 use Illuminate\Support\Facades\Auth; // Gestion utilisateur connecté
 use Illuminate\Support\Facades\Gate; // Permet de gérer les autorisations (Gate)
 use Carbon\Carbon; // Gestion date et heure
+use App\Interfaces\PostRepositoryInterface;
 
 class PostController extends Controller
 {   
@@ -26,7 +27,7 @@ class PostController extends Controller
         $image_path = $request->input('image_path');
         
         // Creation du post
-        $post = Post::create([
+        $post = $this->posts->create([
             'user_id' => $user_id, 
             'content' => $content,
             'image_path' => $image_path
@@ -48,8 +49,8 @@ class PostController extends Controller
     // Fonction de supression du posts
     public function delete($id) {
         
-        $post = Post::find($id);
-
+        $post = $this->posts->find($id);
+        
         // 1. Vérifie si le post existe (pour éviter un crash)
         if (!$post) {
             return response()->json(['message' => 'Post introuvable'], 404);
@@ -75,7 +76,7 @@ class PostController extends Controller
         }
 
         // Si autorisé → suppression
-        $post->delete(); 
+        $this->posts->delete($id);
          
         return response()->json([
             'message' => 'Post supprimé avec succès !',
