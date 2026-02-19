@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; // On ajoute ça pour aider l'IDE
 use App\Interfaces\LikeRepositoryInterface;
+use App\Models\Like;
 
 
 class LikeController extends Controller
@@ -45,7 +46,7 @@ class LikeController extends Controller
 
     // Fonction de supression du like
     public function delete($id) {
-        $this->likes->find($id);
+        $like = $this->likes->find($id);
 
         // Vérifie si le like existe (pour éviter un crash)
         if (!$like) {
