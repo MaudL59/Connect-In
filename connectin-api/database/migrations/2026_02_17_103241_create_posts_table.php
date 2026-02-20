@@ -14,18 +14,19 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             
-            // Le contenu du post (le texte que l'utilisateur écrit)
+            // Le texte du commentaire
             $table->text('content');
-            
-            // Optionnel : un titre pour le post
-            $table->string('title')->nullable(); 
 
-            // LA RELATION : Lien vers l'utilisateur qui publie
-            // constrained() cherche automatiquement la table 'users'
-            // onDelete('cascade') supprime les posts si l'utilisateur est supprimé
+            // L'utilisateur qui écrit le commentaire
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
+            // Le post auquel appartient le commentaire
+            $table->foreignId('post_id')->constrained()->onDelete('cascade');
+
             $table->timestamps();
+            
+            // Note : Ici on ne met PAS de $table->unique car l'utilisateur 
+            // a le droit de commenter plusieurs fois le même post.
         });
     }
 
@@ -34,7 +35,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('comments');
     }
 };
 ?>
