@@ -18,6 +18,49 @@ class PostController extends Controller
         // Exemple : "il y a 2 minutes", "15 février 2025"
         Carbon::setLocale('fr');
     }
+    // Fonction pour récupérer tous les posts
+    public function index()
+    {
+    /*
+    On récupère tous les posts via le Repository.
+
+    with() permet de charger les relations :
+    - user → auteur du post
+    - comments → commentaires liés
+    - likes → likes liés
+
+    (optionnel mais recommandé pour éviter trop de requêtes SQL)
+    */
+    $posts = $this->posts->all();
+
+    /*
+    On transforme les données pour ajouter
+    une date lisible avec Carbon
+    */
+    $formattedPosts = $posts->map(function ($post) {
+        return [
+            'id' => $post->id,
+            'content' => $post->content,
+            'image_path' => $post->image_path,
+
+            // Auteur du post
+            'user' => [
+                'id' => $post->user->id ?? null,
+                'name' => $post->user->full_name ?? null
+            ],
+
+            // Nombre de commentaires et likes
+            'comments_count' => $post->comments->count(),
+            'likes_count' => $post->likes->count(),
+
+            // Date lisible en français
+            'created_at' => Carbon::parse($post->created_at)->diffForHumans()
+        ];
+    });
+
+    return response()->json($formattedPosts, 200);
+    }
+
 
     public function add(Request $request) {
         
