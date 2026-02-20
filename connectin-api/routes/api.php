@@ -6,7 +6,12 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthentificationController;
 
+//  ROUTES PUBLIQUES (Accessibles sans token)
+Route::post('/register', [AuthentificationController::class, 'register']);
+Route::post('/login', [AuthentificationController::class, 'login']);
+// ROUTES PROTÉGÉES (Nécessitent un token)
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
@@ -18,6 +23,7 @@ Route::get('/ping', function () {
         'message' => 'L\'API fonctionne !'
     ]);
 });
+
 
 // routes vers les fonctions des controllers
 Route::middleware('auth:sanctum')-> group(function(){
