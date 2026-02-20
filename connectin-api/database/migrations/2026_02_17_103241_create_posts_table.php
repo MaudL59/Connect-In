@@ -11,20 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('likes', function (Blueprint $table) {
+        Schema::create('posts', function (Blueprint $table) {
             $table->id();
             
-            // L'utilisateur qui donne le like
-            // clef étranger
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            
-            // Le post qui reçoit le like
-            $table->foreignId('post_id')->constrained()->onDelete('cascade');
-            
-            $table->timestamps();
+            // Le texte du commentaire
+            $table->text('content');
 
-            // CETTE LIGNE : Empêche de liker plus d'une fois le même post
-            $table->unique(['user_id', 'post_id']);
+            // L'utilisateur qui écrit le commentaire
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+
+            // Le post auquel appartient le commentaire
+            $table->foreignId('post_id')->constrained()->onDelete('cascade');
+
+            $table->timestamps();
+            
+            // Note : Ici on ne met PAS de $table->unique car l'utilisateur 
+            // a le droit de commenter plusieurs fois le même post.
         });
     }
 
@@ -33,7 +35,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('likes');
+        Schema::dropIfExists('comments');
     }
 };
 ?>
