@@ -1,12 +1,13 @@
 import "./bootstrap";
 import { createRoot } from "react-dom/client";
 import { StrictMode } from "react";
+import React, { useState } from "react";
+import Login from "./Login";
 
 export default function App() {
     return (
         <div className="App">
-            <h1 class="text-white">Hello World !!</h1>
-            <h2 class="text-red">Nouvel essai sur react</h2>
+            <Login />
         </div>
     );
 }
