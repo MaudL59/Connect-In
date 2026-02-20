@@ -3,15 +3,46 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth; // On ajoute ça pour aider l'IDE
+use App\Interfaces\UserRepositoryInterface;
 
 
 class UserController extends Controller
 {
+    public function __construct(private UserRepositoryInterface $users)
+    {
+    }
+    // Inscription d'un nouvel utilisateur
+    public function add(Request $request) {
+        
+        // 1. Validation stricte des données
+        $validated = $request->validate([
+            'first_name' => 'required|string',
+            'last_name'  => 'required|string',
+            'email'      => 'required|email|unique:users,email', // Vérifie que l'email n'existe pas déjà
+            'password'   => 'required|string|confirmed',   // Nécessite un champ password_confirmation
+        ]);
+
+        // 2. Création de l'utilisateur via le Repository
+        $user = $this->users->create([
+            'first_name' => $validated['first_name'],
+            'last_name'  => $validated['last_name'],
+            'email'      => $validated['email'],
+            'password'   => bcrypt($validated['password']), // Toujours crypter le mot de passe !
+        ]);
+
+        // 3. Réponse
+        return response()->json([
+            'message' => 'Bienvenue parmi nous ! Ton compte a été créé.',
+            'user'    => [
+                'id'    => $user->id,
+                'email' => $user->email
+            ]
+        ], 201); // 201 = Créé avec succès
+    }
     // permettre à n'importe quel utilisateur de voir le profil d'un autre membre
     public function show($id){
-        $user = User::find($id);
+        $user = $this->users->find($id);
 
         if(!$user){
             return response()->json(['message' => 'Utilisateur introuvable'], 404);
@@ -26,7 +57,7 @@ class UserController extends Controller
     // permet à l'utilisateur de modifier son profil
     public function update(Request $request, $id){
 
-        $user = User::find($id);
+        $user = $this->users->find($id);
         // on recherche l'utilisateur
         if(!$user){
             return response()->json(['message' => 'Utilisateur introuvable'], 404);
@@ -51,14 +82,14 @@ class UserController extends Controller
             $data['password'] = bcrypt($request->input('password'));
         }
         // mise a jour du profil
-        $user->update($data);
+        $this->users->update($id, $data);
 
         return response()->json(['message' => 'Profil mis à jour !'], 200); 
         // 200 = succés
     }
 
     public function delete(Request $request, $id) {
-        $user = User::find($id);
+        $user = $this->users->find($id);
 
 
         // on recherche l'utilisateur
@@ -83,14 +114,14 @@ class UserController extends Controller
             // CAS 1 : On supprime tous, le profil, les posts et les commentaires
             $user->posts()->delete();
             $user->comments()->delete();
-            $user->delete();
+            $this->users->delete($id);
             return response()->json(['message' => 'Compte et contenus associés supprimés'], 200);
         } else {
             // CAS 2 : On met en anonyme les posts et les commentaires
             $user->posts()->update(['content' => "Utilisateur suprimé"]);
             
 
-            $user->delete();
+            $this->users->delete($id);
             
             return response()->json(['message' => 'Compte anonymisé, contenus conservés'], 200);
     }

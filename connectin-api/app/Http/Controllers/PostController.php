@@ -8,6 +8,7 @@ use App\Models\Post;
 use Illuminate\Support\Facades\Auth; // Gestion utilisateur connecté
 use Illuminate\Support\Facades\Gate; // Permet de gérer les autorisations (Gate)
 use Carbon\Carbon; // Gestion date et heure
+use App\Interfaces\PostRepositoryInterface;
 
 class PostController extends Controller
 {   
@@ -18,6 +19,32 @@ class PostController extends Controller
         Carbon::setLocale('fr');
     }
 
+    public function add(Request $request) {
+        
+        // 1. Validation : On vérifie que le contenu n'est pas vide
+        $validated = $request->validate([
+            'content' => 'required|string', // Limite style 
+            'image_path' => 'nullable|string'       // L'image est optionnelle
+        ]);
+
+        // 2. Récupération de l'ID de l'utilisateur connecté
+        $user_id = Auth::id();
+
+        // 3. Création via le Repository
+        $post = $this->posts->create([
+            'user_id' => $user_id,
+            'content' => $validated['content'],
+            'image_path' => $validated['image_path'] ?? null
+        ]);
+
+        // 4. Réponse au format JSON
+        return response()->json([
+            'message' => 'Post ajouté avec succès !',
+            'post' => $post,
+            'human_date' => Carbon::parse($post->created_at)->diffForHumans()
+        ], 201); // 201 = Création réussie
+    }
+
     // Fonction de sauvegarde du post
     public function save(Request $request) {
 
@@ -26,7 +53,7 @@ class PostController extends Controller
         $image_path = $request->input('image_path');
         
         // Creation du post
-        $post = Post::create([
+        $post = $this->posts->create([
             'user_id' => $user_id, 
             'content' => $content,
             'image_path' => $image_path
@@ -48,8 +75,8 @@ class PostController extends Controller
     // Fonction de supression du posts
     public function delete($id) {
         
-        $post = Post::find($id);
-
+        $post = $this->posts->find($id);
+        
         // 1. Vérifie si le post existe (pour éviter un crash)
         if (!$post) {
             return response()->json(['message' => 'Post introuvable'], 404);
@@ -75,7 +102,7 @@ class PostController extends Controller
         }
 
         // Si autorisé → suppression
-        $post->delete(); 
+        $this->posts->delete($id);
          
         return response()->json([
             'message' => 'Post supprimé avec succès !',
