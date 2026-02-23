@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 // On importe la mémoire (useState)
 
-export default function Login() {
+export default function Inscription({navigation}) {
     const [firtName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
