@@ -6,11 +6,13 @@ import Login from "./Login";
 import Inscription from "./Inscription";
 
 
+
 export default function App() {
     return (
         <div className="App">
-            <Login />
+            <Inscription />
         </div>
+
     );
 }
 
