@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 // On importe la mémoire (useState)
+import { Link } from "react-router-dom"; // Import nécessaire pour le lien
 
-export default function Login({ navigation }) {
+export default function Login() {
         const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     return (
@@ -54,13 +55,12 @@ export default function Login({ navigation }) {
 
                        <p className="text-slate-400 text-sm text-center mt-4">
                             Pas encore inscrit ?{" "}
-                            {/* lien vers le formulaire d'inscription */}
-                            <span
-                                onClick={() => navigation("inscription")}
-                                className="text-blue-500 hover:text-blue-400 cursor-pointer underline underline-offset-4 transition-colors">
-                                    
+                            <Link
+                                to="/inscription"
+                                className="text-blue-500 hover:text-blue-400 cursor-pointer underline underline-offset-4 transition-colors"
+                            >
                                 Cliquez ici
-                            </span>
+                            </Link>
                         </p>
                     </form>
                 </div>
