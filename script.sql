@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS users(
 CREATE TABLE IF NOT EXISTS posts (
     id BIGINT AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
+    post_id BIGINT  NULL,
     content TEXT,
     image_path VARCHAR(255) NULL,
     created_at	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,	
