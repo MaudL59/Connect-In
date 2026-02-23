@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 // On importe la mémoire (useState)
 
-export default function Login() {
-    const [email, setEmail] = useState("");
+export default function Login({ navigation }) {
+        const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     return (
         // Le design Dark Blue avec Tailwind
@@ -52,14 +52,15 @@ export default function Login() {
                             Se connecter
                         </button>
 
-                        <p className="text-slate-400 text-sm text-center mt-4">
+                       <p className="text-slate-400 text-sm text-center mt-4">
                             Pas encore inscrit ?{" "}
                             {/* lien vers le formulaire d'inscription */}
-                            <a
-                                href="Inscription.jsx"
+                            <span
+                                onClick={() => navigation("inscription")}
                                 className="text-blue-500 hover:text-blue-400 cursor-pointer underline underline-offset-4 transition-colors">
+                                    
                                 Cliquez ici
-                            </a>
+                            </span>
                         </p>
                     </form>
                 </div>
