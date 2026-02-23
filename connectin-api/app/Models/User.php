@@ -54,7 +54,7 @@ class User extends Authenticatable
         ];
     }
     //  un utilisateur peut faire plusieurs posts
-    public function post() {
+    public function posts() {
     return $this->hasMany(Post::class);  // hasMany ici car l'utilisateur peut effectuer plusieurs post
     }
     // l'utilisateur peut faire plusieurs commentaires  
