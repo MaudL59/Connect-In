@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            
+
             // Le texte du commentaire
             $table->text('content');
 
@@ -21,10 +21,11 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
             // Le post auquel appartient le commentaire
-            $table->foreignId('post_id')->constrained()->onDelete('cascade');
+            $table->foreignId('post_id')->nullable()->constrained('posts')->onDelete('cascade');            // le post peut contenir une image
+            $table->string('image_path')->nullable();
 
             $table->timestamps();
-            
+
             // Note : Ici on ne met PAS de $table->unique car l'utilisateur 
             // a le droit de commenter plusieurs fois le même post.
         });
@@ -35,7 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists('posts');
     }
 };
-?>
