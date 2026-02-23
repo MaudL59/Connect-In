@@ -55,9 +55,11 @@ export default function Login() {
                         <p className="text-slate-400 text-sm text-center mt-4">
                             Pas encore inscrit ?{" "}
                             {/* lien vers le formulaire d'inscription */}
-                            <span className="text-blue-500 hover:text-blue-400 cursor-pointer underline underline-offset-4 transition-colors">
+                            <a
+                                href="Inscription.jsx"
+                                className="text-blue-500 hover:text-blue-400 cursor-pointer underline underline-offset-4 transition-colors">
                                 Cliquez ici
-                            </span>
+                            </a>
                         </p>
                     </form>
                 </div>
