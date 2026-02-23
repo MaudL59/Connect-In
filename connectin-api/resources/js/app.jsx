@@ -19,3 +19,22 @@ root.render(
         <App />
     </StrictMode>,
 );
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './Login'; // Vérifie que le nom du fichier est bien Login.jsx
+import Inscription from './Inscription'; // Vérifie que c'est bien Inscription.jsx
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        {/* Page de connexion par défaut */}
+        <Route path="/" element={<Login />} />
+        
+        {/* Route pour l'inscription */}
+        <Route path="/inscription" element={<Inscription />} />
+      </Routes>
+    </Router>
+  );
+}
+
+// export default App;
