@@ -1,7 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Import pour le lien de retour
 
-export default function Inscription() {
+export default function Inscription({ navigation, setUser }) {
+    function handleSubmit(e) {
+        e.preventDefault();
+        setUser({ nom: lastName, prenom: firstName });
+        navigation("accueil");
+    }
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -13,17 +17,22 @@ export default function Inscription() {
             <h1 className="h-20 text-white bg-blue-800 flex items-center justify-center text-xl font-semibold w-full">
                 CONNECT'IN
             </h1>
-            
+
             <div className="flex-1 flex items-center justify-center py-10">
                 <div className="bg-slate-900 p-8 rounded-xl shadow-xl border border-slate-800 w-full max-w-md">
                     <h2 className="text-2xl font-extralight text-white mb-6 text-center">
                         Inscription
                     </h2>
-                    
-                    <form className="flex flex-col gap-4">
+
+                    <form
+                        onSubmit={handleSubmit}
+                        className="flex flex-col gap-4"
+                    >
                         {/* Champ Prénom */}
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">Prénom</label>
+                            <label className="text-slate-300 text-sm">
+                                Prénom
+                            </label>
                             <input
                                 type="text"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -35,7 +44,9 @@ export default function Inscription() {
 
                         {/* Champ Nom */}
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">Nom</label>
+                            <label className="text-slate-300 text-sm">
+                                Nom
+                            </label>
                             <input
                                 type="text"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -47,7 +58,9 @@ export default function Inscription() {
 
                         {/* Champ Email */}
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">Email</label>
+                            <label className="text-slate-300 text-sm">
+                                Email
+                            </label>
                             <input
                                 type="email"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -59,7 +72,9 @@ export default function Inscription() {
 
                         {/* Champ Mot de passe */}
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">Mot de passe</label>
+                            <label className="text-slate-300 text-sm">
+                                Mot de passe
+                            </label>
                             <input
                                 type="password"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -71,17 +86,24 @@ export default function Inscription() {
 
                         {/* Champ Confirmation Mot de passe */}
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">Confirmer le mot de passe</label>
+                            <label className="text-slate-300 text-sm">
+                                Confirmer le mot de passe
+                            </label>
                             <input
                                 type="password"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
                                 placeholder="Confirmer"
                                 value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                onChange={(e) =>
+                                    setConfirmPassword(e.target.value)
+                                }
                             />
                         </div>
 
-                        <button type="button" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition-colors mt-2">
+                        <button
+                            type="submit"
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition-colors mt-2"
+                        >
                             S'inscrire
                         </button>
 

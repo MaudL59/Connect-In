@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 // On importe la mémoire (useState)
-import { Link } from "react-router-dom"; // Import nécessaire pour le lien
 
-export default function Login() {
-        const [email, setEmail] = useState("");
+export default function Login({ navigation }) {
+    function handleSubmit(e) {
+        e.preventDefault();
+        navigation("accueil");
+    }
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     return (
         // Le design Dark Blue avec Tailwind
@@ -19,7 +22,10 @@ export default function Login() {
                         Connexion
                     </h2>
 
-                    <form className="flex flex-col gap-4">
+                    <form
+                        onSubmit={handleSubmit}
+                        className="flex flex-col gap-4"
+                    >
                         {/* Champ Email */}
                         <div className="flex flex-col gap-1">
                             <label className="text-slate-300 text-sm">
@@ -53,14 +59,14 @@ export default function Login() {
                             Se connecter
                         </button>
 
-                       <p className="text-slate-400 text-sm text-center mt-4">
+                        <p className="text-slate-400 text-sm text-center mt-4">
                             Pas encore inscrit ?{" "}
-                            <Link
-                                to="/inscription"
+                            <span
+                                onClick={() => navigation("inscription")}
                                 className="text-blue-500 hover:text-blue-400 cursor-pointer underline underline-offset-4 transition-colors"
                             >
                                 Cliquez ici
-                            </Link>
+                            </span>
                         </p>
                     </form>
                 </div>
