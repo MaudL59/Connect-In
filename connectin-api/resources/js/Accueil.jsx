@@ -12,12 +12,17 @@ export default function Accueil({ navigation, user }) {
                 Nom Uilisateur
             </span>
             <span
-                onClick={() => navigation("profil")}
+                onClick={() => navigation("accueil")}
                 className="cursor-pointer hover:underline"
             >
                 CONNECT'IN
             </span>
-            <bouton>Se déconnecter</bouton>
+            <bouton
+                onClick={() => navigation("login")}
+                className="cursor-pointer hover:underline"
+            >
+                Se déconnecter
+            </bouton>
         </h1>
     );
 }
