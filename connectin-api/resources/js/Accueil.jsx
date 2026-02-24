@@ -9,7 +9,7 @@ export default function Accueil({ navigation, user }) {
                 onClick={() => navigation("profil")}
                 className="cursor-pointer hover:underline"
             >
-                Nom Uilisateur
+                Bienvenue, {user.first_name} {user.last_name} !
             </span>
             <span
                 onClick={() => navigation("accueil")}

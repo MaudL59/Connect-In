@@ -3,7 +3,7 @@ import React, { useState } from "react";
 export default function Inscription({ navigation, setUser }) {
     function handleSubmit(e) {
         e.preventDefault();
-        setUser({ nom: lastName, prenom: firstName });
+        setUser({ last_name: lastName, first_name: firstName });
         navigation("accueil");
     }
     const [firstName, setFirstName] = useState("");

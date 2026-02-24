@@ -2,11 +2,7 @@
 import React, { useState } from "react";
 // On importe la mémoire (useState)
 
-export default function Profil({ navigation }) {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [first_name, setFirstName] = useState("");
-    const [last_name, setLastName] = useState("");
+export default function Profil({ navigation, user }) {
     return (
         <div className="min-h-screen bg-slate-950 flex flex-col">
             <h1 className="h-20 text-white bg-blue-800 flex justify-around items-center text-xl font-semibold  w-full">
@@ -15,7 +11,7 @@ export default function Profil({ navigation }) {
                     onClick={() => navigation("profil")}
                     className="cursor-pointer hover:underline"
                 >
-                    Nom Uilisateur
+                    {user.first_name} {user.last_name}
                 </span>
                 <span
                     onClick={() => navigation("accueil")}
@@ -23,12 +19,12 @@ export default function Profil({ navigation }) {
                 >
                     CONNECT'IN
                 </span>
-                <bouton
+                <button
                     onClick={() => navigation("login")}
                     className="cursor-pointer hover:underline"
                 >
                     Se déconnecter
-                </bouton>
+                </button>
             </h1>
             <div className="flex-1 flex items-center justify-center">
                 <div className="bg-slate-900 p-8 rounded-xl shadow-xl border border-slate-800 w-full max-w-md">
@@ -36,70 +32,50 @@ export default function Profil({ navigation }) {
                         Mon Profil
                     </h2>
 
-                    <form className="flex flex-col gap-4">
-                        {/* Champ Last_name/Nom */}
-                        <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">
-                                Nom
-                            </label>
-                            <input
-                                type="email"
-                                className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                value={email}
-                                onChange={(e) => setLastName(e.target.value)}
-                            />
-                            <button>Modifier</button>
+                    <div>
+                        <div className="flex justify-between items-center border-b border-slate-800">
+                            <div className="flex flex-col">
+                                <span className="text-slate-400">Nom</span>
+                                <span className="text-white">
+                                    {user.last_name}
+                                </span>
+                            </div>
+                            <button className="text-white cursor-pointer hover:text-red-600">
+                                Modifier
+                            </button>
                         </div>
-
-                        {/* Champ First_name/Nom */}
-                        <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">
-                                Prénom
-                            </label>
-                            <input
-                                type="email"
-                                className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                value={email}
-                                onChange={(e) => setFirstName(e.target.value)}
-                            />
-                            <button>Modifier</button>
+                        <div className="flex justify-between items-center border-b border-slate-800">
+                            <div className="flex flex-col">
+                                <span className="text-slate-400">Prénom</span>
+                                <span className="text-white">
+                                    {user.first_name}
+                                </span>
+                            </div>
+                            <button className="text-white cursor-pointer hover:text-red-600">
+                                Modifier
+                            </button>
                         </div>
-
-                        {/* Champ Email */}
-                        <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">
-                                Email
-                            </label>
-                            <input
-                                type="email"
-                                className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                placeholder="exemple@email.com"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <button>Modifier</button>
+                        <div className="flex justify-between items-center border-b border-slate-800">
+                            <div className="flex flex-col">
+                                <span className="text-slate-400">E-mail</span>
+                                <span className="text-white">{user.email}</span>
+                            </div>
+                            <button className="text-white cursor-pointer hover:text-red-600">
+                                Modifier
+                            </button>
                         </div>
-
-                        {/* Champ Mot de passe */}
-                        <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">
-                                Mot de passe
-                            </label>
-                            <input
-                                type="password"
-                                placeholder="mot de passe"
-                                className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                            <button>Modifier</button>
+                        <div className="flex justify-between items-center">
+                            <div className="flex flex-col">
+                                <span className="text-slate-400">
+                                    Mot de Passe
+                                </span>
+                                <span className="text-white">**********</span>
+                            </div>
+                            <button className="text-white cursor-pointer hover:text-red-600">
+                                Modifier
+                            </button>
                         </div>
-
-                        {/* Bouton de connexion */}
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition-colors mt-2">
-                            Enregistrer
-                        </button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
