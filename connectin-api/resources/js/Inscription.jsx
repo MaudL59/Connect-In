@@ -3,7 +3,19 @@ import React, { useState } from "react";
 export default function Inscription({ navigation, setUser }) {
     function handleSubmit(e) {
         e.preventDefault();
-        setUser({ last_name: lastName, first_name: firstName });
+
+        if (password !== confirmPassword) {
+            alert("Attention : Les mots de passe ne sont pas identiques !");
+            return;
+        }
+
+        setUser({
+            last_name: lastName,
+            first_name: firstName,
+            email: email,
+            password: password,
+        });
+
         navigation("accueil");
     }
     const [firstName, setFirstName] = useState("");
@@ -28,20 +40,6 @@ export default function Inscription({ navigation, setUser }) {
                         onSubmit={handleSubmit}
                         className="flex flex-col gap-4"
                     >
-                        {/* Champ Prénom */}
-                        <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">
-                                Prénom
-                            </label>
-                            <input
-                                type="text"
-                                className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                placeholder="Votre prénom"
-                                value={firstName}
-                                onChange={(e) => setFirstName(e.target.value)}
-                            />
-                        </div>
-
                         {/* Champ Nom */}
                         <div className="flex flex-col gap-1">
                             <label className="text-slate-300 text-sm">
@@ -50,9 +48,25 @@ export default function Inscription({ navigation, setUser }) {
                             <input
                                 type="text"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                required
                                 placeholder="Votre nom"
                                 value={lastName}
                                 onChange={(e) => setLastName(e.target.value)}
+                            />
+                        </div>
+
+                        {/* Champ Prénom */}
+                        <div className="flex flex-col gap-1">
+                            <label className="text-slate-300 text-sm">
+                                Prénom
+                            </label>
+                            <input
+                                type="text"
+                                className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                required
+                                placeholder="Votre prénom"
+                                value={firstName}
+                                onChange={(e) => setFirstName(e.target.value)}
                             />
                         </div>
 
@@ -63,7 +77,8 @@ export default function Inscription({ navigation, setUser }) {
                             </label>
                             <input
                                 type="email"
-                                className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 "
+                                required
                                 placeholder="exemple@email.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -80,6 +95,7 @@ export default function Inscription({ navigation, setUser }) {
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
                                 placeholder="Créer un mot de passe"
                                 value={password}
+                                required
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
@@ -91,9 +107,10 @@ export default function Inscription({ navigation, setUser }) {
                             </label>
                             <input
                                 type="password"
-                                className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 "
                                 placeholder="Confirmer"
                                 value={confirmPassword}
+                                required
                                 onChange={(e) =>
                                     setConfirmPassword(e.target.value)
                                 }
@@ -107,7 +124,10 @@ export default function Inscription({ navigation, setUser }) {
                             S'inscrire
                         </button>
 
-                        <p className="text-slate-400 text-sm text-center mt-4">
+                        <p
+                            className="text-slate-400 text-sm text-center mt-4 cursor-pointer hover:underline"
+                            onClick={() => navigation("login")}
+                        >
                             Déjà un compte ?{" "}
                             {/* <Link to="/" className="text-blue-500 hover:text-blue-400 underline underline-offset-4 transition-colors">
                                 Connectez-vous
