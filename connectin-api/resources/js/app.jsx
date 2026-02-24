@@ -9,7 +9,7 @@ import Accueil from "./Accueil";
 
 export default function App() {
     const [page, setPage] = useState("login");
-    const [user, setUser] = useState({ nom: "", prenom: "" });
+    const [user, setUser] = useState({ last_name: "", first_name: "" });
     const pages = {
         login: <Login navigation={setPage} />,
         inscription: <Inscription navigation={setPage} setUser={setUser} />,
