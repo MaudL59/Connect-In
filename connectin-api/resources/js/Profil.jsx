@@ -11,7 +11,7 @@ export default function Profil({ navigation, user }) {
                     onClick={() => navigation("profil")}
                     className="cursor-pointer hover:underline"
                 >
-                    {user.first_name} {user.last_name}
+                    Bienvenue, {user.first_name} {user.last_name} !
                 </span>
                 <span
                     onClick={() => navigation("accueil")}
