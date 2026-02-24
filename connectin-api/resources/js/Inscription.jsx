@@ -9,14 +9,14 @@ export default function Inscription({ navigation, setUser }) {
             alert("Attention : Les mots de passe ne sont pas identiques !");
             return;
         }
-        // recupere les informations pour les réutilisers
+        // recupére les informations pour les réutilisers
         setUser({
             last_name: lastName,
             first_name: firstName,
             email: email,
             password: password,
         });
-        // si tout va bien aller sur le l'accueil
+        // si tout va bien aller sur l'accueil
         navigation("accueil");
     }
     const [firstName, setFirstName] = useState("");
