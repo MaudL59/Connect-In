@@ -18,12 +18,17 @@ export default function Profil({ navigation }) {
                     Nom Uilisateur
                 </span>
                 <span
-                    onClick={() => navigation("profil")}
+                    onClick={() => navigation("accueil")}
                     className="cursor-pointer hover:underline"
                 >
                     CONNECT'IN
                 </span>
-                <bouton>Se déconnecter</bouton>
+                <bouton
+                    onClick={() => navigation("login")}
+                    className="cursor-pointer hover:underline"
+                >
+                    Se déconnecter
+                </bouton>
             </h1>
             <div className="flex-1 flex items-center justify-center">
                 <div className="bg-slate-900 p-8 rounded-xl shadow-xl border border-slate-800 w-full max-w-md">
