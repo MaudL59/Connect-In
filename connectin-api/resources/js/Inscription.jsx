@@ -1,21 +1,22 @@
 import React, { useState } from "react";
 
 export default function Inscription({ navigation, setUser }) {
+    // bouton s'inscrire
     function handleSubmit(e) {
         e.preventDefault();
-
+        // compare le mot de passe et le confirme mot de passe
         if (password !== confirmPassword) {
             alert("Attention : Les mots de passe ne sont pas identiques !");
             return;
         }
-
+        // recupere les informations pour les réutilisers
         setUser({
             last_name: lastName,
             first_name: firstName,
             email: email,
             password: password,
         });
-
+        // si tout va bien aller sur le l'accueil
         navigation("accueil");
     }
     const [firstName, setFirstName] = useState("");
