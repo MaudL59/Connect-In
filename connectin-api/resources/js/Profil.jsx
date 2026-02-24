@@ -11,7 +11,12 @@ export default function Profil({ navigation }) {
         <div className="min-h-screen bg-slate-950 flex flex-col">
             <h1 className="h-20 text-white bg-blue-800 flex justify-around items-center text-xl font-semibold  w-full">
                 {" "}
-                <span>Nom Uilisateur</span>
+                <span
+                    onClick={() => navigation("profil")}
+                    className="cursor-pointer hover:underline"
+                >
+                    Nom Uilisateur
+                </span>
                 CONNECT'IN
                 <bouton>Se déconnecter</bouton>
             </h1>
