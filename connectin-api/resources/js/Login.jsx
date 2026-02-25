@@ -3,14 +3,13 @@ import React, { useState } from "react";
 export default function Login({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState(""); // Pour afficher si le login échoue
+    const [error, setError] = useState(""); 
 
     async function handleSubmit(e) {
         e.preventDefault();
-        setError(""); // On réinitialise l'erreur à chaque tentative
+        setError(""); 
 
         try {
-            // LIAISON BACKEND : Envoi des données vers Laravel
             const response = await fetch("http://127.0.0.1:8000/api/login", {
                 method: "POST",
                 headers: {
@@ -26,15 +25,18 @@ export default function Login({ navigation }) {
             const data = await response.json();
 
             if (response.ok) {
-                // Si Laravel dit OK : on stocke le token et on change de page
-                localStorage.setItem("access_token", data.token);
-                navigation("accueil");
+                // CORRECTION ICI : data.token devient data.access_token
+                // car c'est ce que tu as écrit dans ton AuthentificationController.php
+                localStorage.setItem("access_token", data.access_token);
+                
+                alert("Connexion réussie !");
+                navigation("accueil"); // Redirection vers l'accueil
             } else {
-                // Si Laravel dit NON (mauvais mdp, etc.)
-                setError(data.message || "Identifiants incorrects");
+                // Laravel renvoie le message "Identifiants incorrects"
+                setError(data.message || "Email ou mot de passe invalide.");
             }
         } catch (err) {
-            setError("Impossible de contacter le serveur.");
+            setError("Le serveur ne répond pas. Vérifie MAMP ou php artisan serve.");
         }
     }
 
@@ -49,7 +51,6 @@ export default function Login({ navigation }) {
                         Connexion
                     </h2>
 
-                    {/* Affichage de l'erreur si elle existe */}
                     {error && (
                         <div className="bg-red-500/10 border border-red-500 text-red-500 p-2 rounded mb-4 text-sm text-center">
                             {error}
@@ -85,14 +86,8 @@ export default function Login({ navigation }) {
                             Se connecter
                         </button>
 
-                        <p className="text-slate-400 text-sm text-center mt-4">
-                            Pas encore inscrit ?{" "}
-                            <span
-                                onClick={() => navigation("inscription")}
-                                className="text-blue-500 hover:text-blue-400 cursor-pointer underline underline-offset-4 transition-colors"
-                            >
-                                Cliquez ici
-                            </span>
+                        <p className="text-slate-400 text-sm text-center mt-4 cursor-pointer hover:underline" onClick={() => navigation("inscription")}>
+                            Pas encore inscrit ? Cliquez ici
                         </p>
                     </form>
                 </div>

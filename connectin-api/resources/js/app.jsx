@@ -13,7 +13,7 @@ export default function App() {
         last_name: "",
         first_name: "",
         email: "",
-        passworld: "",
+        password: "",
     });
     const pages = {
         login: <Login navigation={setPage} />,
