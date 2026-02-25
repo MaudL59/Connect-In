@@ -11,11 +11,14 @@ export default function Profil({ navigation, user, setUser }) {
     const [tempFirstName, setTempFirstName] = useState(user.first_name);
     // pour l'email
     const [isEditingEmail, setIsEditingEmail] = useState(false);
-    const [tempLastEmail, setTempLastEmail] = useState(user.email);
+    const [tempEmail, setTempEmail] = useState(user.email);
+    // utilisation du mot de passe pour changer l'email
+    const [verificationPassword, setVerificationPassword] = useState("");
     // pour le mot de passe
     const [isEditingPassworld, setIsEditingPassworld] = useState(false);
+    const [tempPassword, setTempPassword] = useState(user.password);
 
-    // fonction pour le bouton enregistrement du nom
+    // fonction pour le bouton enregistrement du nouveau nom
     function handleSaveLastName() {
         if (isEditingLastName) {
             // On enregistre les changements pour que seul le nom change
@@ -25,6 +28,36 @@ export default function Profil({ navigation, user, setUser }) {
         } else {
             // Si c'était fermé, on l'ouvre
             setIsEditingLastName(true);
+        }
+    }
+    // fonction pour le bouton enregistrement du nouveau prenom
+    function handleSaveFirstName() {
+        if (isEditingFirstName) {
+            // On enregistre les changements pour que seul le prenom change
+            setUser({ ...user, first_name: tempFirstName });
+            // On ferme l'input
+            setIsEditingFirstName(false);
+        } else {
+            // Si c'était fermé, on l'ouvre
+            setIsEditingFirstName(true);
+        }
+    }
+
+    // fonction pour le bouton enregistrement du nouveau email
+    function handleSaveEmail() {
+        if (isEditingEmail) {
+            // si le mot de passe de confirmation est correct
+            if (verificationPassword === user.passworld) {
+                // si oui on enregistre
+                setUser({ ...user, email: tempEmail });
+                setIsEditingEmail(false);
+                setVerificationPassword("");
+            } else {
+                // si non, on prévient l'utilisateur
+                alert("Mot de passe incorrect !");
+            }
+        } else {
+            setIsEditingEmail(true);
         }
     }
 
@@ -84,26 +117,71 @@ export default function Profil({ navigation, user, setUser }) {
                                 {isEditingLastName ? "Enregistrer" : "Modifier"}
                             </button>
                         </div>
+                        {/* champ prenom/ FirstName */}
                         <div className="flex justify-between items-center border-b border-slate-800">
                             <div className="flex flex-col">
                                 <span className="text-slate-400">Prénom</span>
-                                <span className="text-white">
-                                    {user.first_name}
-                                </span>
+                                {isEditingFirstName ? (
+                                    <input
+                                        type="text"
+                                        className="bg-slate-800 text-white p-1 rounded border border-blue-500"
+                                        value={tempFirstName}
+                                        onChange={(e) =>
+                                            setTempFirstName(e.target.value)
+                                        }
+                                    />
+                                ) : (
+                                    <span className="text-white">
+                                        {user.first_name}
+                                    </span>
+                                )}
                             </div>
-                            <button className="text-white cursor-pointer hover:text-red-600">
+                            <button
+                                onClick={handleSaveFirstName}
+                                className="text-white cursor-pointer hover:text-red-600"
+                            >
                                 {isEditingFirstName
                                     ? "Enregistrer"
                                     : "Modifier"}
                             </button>
                         </div>
+                        {/* champ email */}
                         <div className="flex justify-between items-center border-b border-slate-800">
                             <div className="flex flex-col">
-                                <span className="text-slate-400">E-mail</span>
-                                <span className="text-white">{user.email}</span>
+                                <span className="text-slate-400">Email</span>
+                                {isEditingEmail ? (
+                                    <div className="flex flex-col gap-2 py-2">
+                                        <input
+                                            type="text"
+                                            className="bg-slate-800 text-white p-1 rounded border border-blue-500"
+                                            value={tempEmail}
+                                            onChange={(e) =>
+                                                setTempEmail(e.target.value)
+                                            }
+                                        />
+                                        <input
+                                            type="password"
+                                            placeholder="Mot de passe actuel"
+                                            value={verificationPassword}
+                                            onChange={(e) =>
+                                                setVerificationPassword(
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className="bg-slate-800 text-white p-1 rounded border border-blue-500"
+                                        />
+                                    </div>
+                                ) : (
+                                    <span className="text-white">
+                                        {user.email}
+                                    </span>
+                                )}
                             </div>
-                            <button className="text-white cursor-pointer hover:text-red-600">
-                                Modifier
+                            <button
+                                onClick={handleSaveEmail}
+                                className="text-white cursor-pointer hover:text-red-600"
+                            >
+                                {isEditingEmail ? "Enregistrer" : "Modifier"}
                             </button>
                         </div>
                         <div className="flex justify-between items-center">
