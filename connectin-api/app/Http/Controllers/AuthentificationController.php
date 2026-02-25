@@ -4,6 +4,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Interfaces\UserRepositoryInterface;
 
@@ -15,6 +16,7 @@ class AuthentificationController extends Controller
 
     // création d'un nouveau utilisateur
     public function register(Request $request){
+        //Log::info('REGISTER DATA:', $request->all());
         // validation de l'utilisateur
         $request->validate([
             'first_name' => 'required|string|max:255',
@@ -28,7 +30,7 @@ class AuthentificationController extends Controller
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => $request->password,
         ]);
 
         // On génère la clé de connexion (le Token)
@@ -44,7 +46,7 @@ class AuthentificationController extends Controller
 
     // la fonction de vérification. Son rôle est de reconnaître un utilisateur qui existe déjà.
     public function login(Request $request){
-
+        //Log::info('LOGIN DATA:', $request->all());
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
