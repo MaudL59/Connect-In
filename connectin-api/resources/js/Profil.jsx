@@ -12,11 +12,13 @@ export default function Profil({ navigation, user, setUser }) {
     // pour l'email
     const [isEditingEmail, setIsEditingEmail] = useState(false);
     const [tempEmail, setTempEmail] = useState(user.email);
-    // utilisation du mot de passe pour changer l'email
+    // on utilise le mot de passe pour changer l'email et le mot de passe
     const [verificationPassword, setVerificationPassword] = useState("");
     // pour le mot de passe
-    const [isEditingPassworld, setIsEditingPassworld] = useState(false);
-    const [tempPassword, setTempPassword] = useState(user.password);
+    const [isEditingPassword, setIsEditingPassword] = useState(false);
+    const [tempPassword, setTempPassword] = useState("");
+    // onconfirme le mot de passe
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     // fonction pour le bouton enregistrement du nouveau nom
     function handleSaveLastName() {
@@ -46,8 +48,8 @@ export default function Profil({ navigation, user, setUser }) {
     // fonction pour le bouton enregistrement du nouveau email
     function handleSaveEmail() {
         if (isEditingEmail) {
-            // si le mot de passe de confirmation est correct
-            if (verificationPassword === user.passworld) {
+            // si le mot de passe actuel est correct
+            if (verificationPassword === user.password) {
                 // si oui on enregistre
                 setUser({ ...user, email: tempEmail });
                 setIsEditingEmail(false);
@@ -58,6 +60,33 @@ export default function Profil({ navigation, user, setUser }) {
             }
         } else {
             setIsEditingEmail(true);
+        }
+    }
+
+    // fonction pour le bouton enregistrement du nouveau mot de passe
+    function handleSavePassword() {
+        if (isEditingPassword) {
+            // si le mot de passe actuel est correct
+            if (verificationPassword === user.password) {
+                // confirmé le nouveau mot de passe
+                if (tempPassword === confirmPassword) {
+                    // si oui, enregistre
+                    setUser({ ...user, password: tempPassword });
+                    setIsEditingPassword(false);
+                    setVerificationPassword("");
+                    setConfirmPassword("");
+                } else {
+                    // si sa ne correspond pas
+                    alert(
+                        "Le nouveau mot de passe et sa confirmation ne correspondent pas.",
+                    );
+                }
+            } else {
+                // si le mot passe actuel saisie est incorrect
+                alert("Mot de passe actuel incorrect !");
+            }
+        } else {
+            setIsEditingPassword(true);
         }
     }
 
@@ -159,6 +188,7 @@ export default function Profil({ navigation, user, setUser }) {
                                                 setTempEmail(e.target.value)
                                             }
                                         />
+                                        {/* securité avec le mot de passe actuel */}
                                         <input
                                             type="password"
                                             placeholder="Mot de passe actuel"
@@ -184,18 +214,66 @@ export default function Profil({ navigation, user, setUser }) {
                                 {isEditingEmail ? "Enregistrer" : "Modifier"}
                             </button>
                         </div>
+
+                        {/* champ du mot de passe */}
                         <div className="flex justify-between items-center">
-                            <div className="flex flex-col">
+                            <div className="flex flex-col gap-2">
                                 <span className="text-slate-400">
                                     Mot de Passe
                                 </span>
-                                <span className="text-white">**********</span>
+                                {isEditingPassword ? (
+                                    <div className="flex flex-col gap-2 py-2">
+                                        {/* verifie le mot de passe actuel */}
+                                        <input
+                                            type="password"
+                                            placeholder="Mot de passe actuel"
+                                            className="bg-slate-800 text-white p-1 rounded border border-blue-500"
+                                            value={verificationPassword}
+                                            onChange={(e) =>
+                                                setVerificationPassword(
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                        {/* le nouveau mot de passe */}
+                                        <input
+                                            type="password"
+                                            placeholder="Nouveau mot de passe"
+                                            className="bg-slate-800 text-white p-1 rounded border border-blue-500"
+                                            value={tempPassword}
+                                            onChange={(e) =>
+                                                setTempPassword(e.target.value)
+                                            }
+                                        />
+                                        {/* confirmation du nouveau mot de passe */}
+                                        <input
+                                            type="password"
+                                            placeholder="Confirmer nouveau"
+                                            className="bg-slate-800 text-white p-1 rounded border border-blue-500"
+                                            value={confirmPassword}
+                                            onChange={(e) =>
+                                                setConfirmPassword(
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                ) : (
+                                    <span className="text-white">
+                                        **********
+                                    </span>
+                                )}
                             </div>
-                            <button className="text-white cursor-pointer hover:text-red-600">
-                                Modifier
+                            <button
+                                onClick={handleSavePassword}
+                                className="text-white cursor-pointer hover:text-red-600"
+                            >
+                                {isEditingPassword ? "Enregistrer" : "Modifier"}
                             </button>
                         </div>
                     </div>
+
+                    <button className="text-red-600">Suprimer le compte</button>
                 </div>
             </div>
         </div>
