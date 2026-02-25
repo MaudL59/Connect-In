@@ -12,7 +12,7 @@ export default function Inscription({ navigation }) {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        setError(""); 
+        setError("");
 
         if (password !== confirmPassword) {
             alert("Attention : Les mots de passe ne sont pas identiques !");
@@ -24,7 +24,7 @@ export default function Inscription({ navigation }) {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Accept": "application/json",
+                    Accept: "application/json",
                 },
                 body: JSON.stringify({
                     first_name: firstName,
@@ -32,7 +32,7 @@ export default function Inscription({ navigation }) {
                     email: email,
                     password: password,
                     // CORRECTION ICI : Laravel a besoin de ce nom précis pour valider 'confirmed'
-                    password_confirmation: confirmPassword, 
+                    password_confirmation: confirmPassword,
                 }),
             });
 
@@ -40,18 +40,20 @@ export default function Inscription({ navigation }) {
 
             if (response.ok) {
                 alert("Inscription réussie ! Connectez-vous maintenant.");
-                navigation("login"); 
+                navigation("login");
             } else {
                 // On affiche les erreurs précises renvoyées par Laravel
                 setError(data.message || "L'inscription a échoué.");
                 console.log("Erreurs du serveur :", data.errors);
             }
         } catch (err) {
-            setError("Impossible de contacter le serveur. Vérifie ton terminal Laravel.");
+            setError(
+                "Impossible de contacter le serveur. Vérifie ton terminal Laravel.",
+            );
         }
     }
 
-// ... (le reste du design est parfait, ne change rien)
+    // ... (le reste du design est parfait, ne change rien)
     return (
         <div className="min-h-screen bg-slate-950 flex flex-col">
             <h1 className="h-20 text-white bg-blue-800 flex items-center justify-center text-xl font-semibold w-full">
@@ -71,67 +73,93 @@ export default function Inscription({ navigation }) {
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                    <form
+                        onSubmit={handleSubmit}
+                        className="flex flex-col gap-4"
+                    >
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">Nom</label>
+                            <label className="text-slate-300 text-sm">
+                                Nom
+                            </label>
                             <input
                                 type="text"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
                                 required
                                 value={lastName}
                                 onChange={(e) => setLastName(e.target.value)}
+                                placeholder="Nom"
                             />
                         </div>
 
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">Prénom</label>
+                            <label className="text-slate-300 text-sm">
+                                Prénom
+                            </label>
                             <input
                                 type="text"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
                                 required
                                 value={firstName}
                                 onChange={(e) => setFirstName(e.target.value)}
+                                placeholder="Prénom"
                             />
                         </div>
 
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">Email</label>
+                            <label className="text-slate-300 text-sm">
+                                Email
+                            </label>
                             <input
                                 type="email"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 "
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                placeholder="exemple@email.com"
                             />
                         </div>
 
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">Mot de passe</label>
+                            <label className="text-slate-300 text-sm">
+                                Mot de passe
+                            </label>
                             <input
                                 type="password"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
                                 value={password}
                                 required
                                 onChange={(e) => setPassword(e.target.value)}
+                                placeholder="mot de passe"
                             />
                         </div>
 
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">Confirmer le mot de passe</label>
+                            <label className="text-slate-300 text-sm">
+                                Confirmer le mot de passe
+                            </label>
                             <input
                                 type="password"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 "
                                 value={confirmPassword}
                                 required
-                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                onChange={(e) =>
+                                    setConfirmPassword(e.target.value)
+                                }
+                                placeholder="mot de passe"
                             />
                         </div>
 
-                        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition-colors mt-2">
+                        <button
+                            type="submit"
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition-colors mt-2"
+                        >
                             S'inscrire
                         </button>
 
-                        <p className="text-slate-400 text-sm text-center mt-4 cursor-pointer hover:underline" onClick={() => navigation("login")}>
+                        <p
+                            className="text-slate-400 text-sm text-center mt-4 cursor-pointer hover:underline"
+                            onClick={() => navigation("login")}
+                        >
                             Déjà un compte ? Cliquez ici
                         </p>
                     </form>
