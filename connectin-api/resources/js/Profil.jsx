@@ -2,7 +2,32 @@
 import React, { useState } from "react";
 // On importe la mémoire (useState)
 
-export default function Profil({ navigation, user }) {
+export default function Profil({ navigation, user, setUser }) {
+    // pour que le nom se modifie
+    const [isEditingLastName, setIsEditingLastName] = useState(false);
+    const [tempLastName, setTempLastName] = useState(user.last_name);
+    // pour le prenom
+    const [isEditingFirstName, setIsEditingFirstName] = useState(false);
+    const [tempFirstName, setTempFirstName] = useState(user.first_name);
+    // pour l'email
+    const [isEditingEmail, setIsEditingEmail] = useState(false);
+    const [tempLastEmail, setTempLastEmail] = useState(user.email);
+    // pour le mot de passe
+    const [isEditingPassworld, setIsEditingPassworld] = useState(false);
+
+    // fonction pour le bouton enregistrement du nom
+    function handleSaveLastName() {
+        if (isEditingLastName) {
+            // On enregistre les changements pour que seul le nom change
+            setUser({ ...user, last_name: tempLastName });
+            // On ferme l'input
+            setIsEditingLastName(false);
+        } else {
+            // Si c'était fermé, on l'ouvre
+            setIsEditingLastName(true);
+        }
+    }
+
     return (
         <div className="min-h-screen bg-slate-950 flex flex-col">
             <h1 className="h-20 text-white bg-blue-800 flex justify-around items-center text-xl font-semibold  w-full">
@@ -33,15 +58,30 @@ export default function Profil({ navigation, user }) {
                     </h2>
 
                     <div>
+                        {/* champ Nom/ LastName */}
                         <div className="flex justify-between items-center border-b border-slate-800">
                             <div className="flex flex-col">
                                 <span className="text-slate-400">Nom</span>
-                                <span className="text-white">
-                                    {user.last_name}
-                                </span>
+                                {isEditingLastName ? (
+                                    <input
+                                        type="text"
+                                        className="bg-slate-800 text-white p-1 rounded border border-blue-500"
+                                        value={tempLastName}
+                                        onChange={(e) =>
+                                            setTempLastName(e.target.value)
+                                        }
+                                    />
+                                ) : (
+                                    <span className="text-white">
+                                        {user.last_name}
+                                    </span>
+                                )}
                             </div>
-                            <button className="text-white cursor-pointer hover:text-red-600">
-                                Modifier
+                            <button
+                                onClick={handleSaveLastName}
+                                className="text-white cursor-pointer hover:text-red-600"
+                            >
+                                {isEditingLastName ? "Enregistrer" : "Modifier"}
                             </button>
                         </div>
                         <div className="flex justify-between items-center border-b border-slate-800">
@@ -52,7 +92,9 @@ export default function Profil({ navigation, user }) {
                                 </span>
                             </div>
                             <button className="text-white cursor-pointer hover:text-red-600">
-                                Modifier
+                                {isEditingFirstName
+                                    ? "Enregistrer"
+                                    : "Modifier"}
                             </button>
                         </div>
                         <div className="flex justify-between items-center border-b border-slate-800">

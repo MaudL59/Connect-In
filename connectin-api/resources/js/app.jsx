@@ -14,7 +14,7 @@ export default function App() {
         login: <Login navigation={setPage} />,
         inscription: <Inscription navigation={setPage} setUser={setUser} />,
         accueil: <Accueil navigation={setPage} user={user} />,
-        profil: <Profil navigation={setPage} user={user} />,
+        profil: <Profil navigation={setPage} user={user} setUser={setUser} />,
     };
 
     return <div className="App">{pages[page]}</div>;
