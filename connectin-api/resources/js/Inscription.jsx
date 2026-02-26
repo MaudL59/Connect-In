@@ -6,9 +6,7 @@ export default function Inscription({ navigation, setUser }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [error, setError] = useState(""); // Pour afficher les erreurs du serveur
-
-    // ... (reste du code identique au début)
+    const [error, setError] = useState(""); 
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -31,7 +29,6 @@ export default function Inscription({ navigation, setUser }) {
                     last_name: lastName,
                     email: email,
                     password: password,
-                    // CORRECTION ICI : Laravel a besoin de ce nom précis pour valider 'confirmed'
                     password_confirmation: confirmPassword,
                 }),
             });
@@ -39,12 +36,24 @@ export default function Inscription({ navigation, setUser }) {
             const data = await response.json();
 
             if (response.ok) {
-                alert("Inscription réussie ! Connectez-vous maintenant.");
+                alert("Inscription réussie !");
+                
+                // --- CORRECTIONS POUR LA PERSISTANCE ---
+                
+                // 1. On met à jour l'utilisateur dans l'état React
                 setUser(data.user);
-                localStorage.setItem("token", data.access_token);
+                
+                // 2. On utilise "access_token" (et non "token") pour que App.js le reconnaisse
+                localStorage.setItem("access_token", data.access_token);
+                
+                // 3. On enregistre les infos de l'utilisateur en texte (JSON)
+                // C'est ce qui évite qu'Aminata ne revienne à l'actualisation !
+                localStorage.setItem("user_data", JSON.stringify(data.user));
+                
+                // 4. On redirige vers l'accueil
                 navigation("accueil");
+                
             } else {
-                // On affiche les erreurs précises renvoyées par Laravel
                 setError(data.message || "L'inscription a échoué.");
                 console.log("Erreurs du serveur :", data.errors);
             }
@@ -55,7 +64,6 @@ export default function Inscription({ navigation, setUser }) {
         }
     }
 
-    // ... (le reste du design est parfait, ne change rien)
     return (
         <div className="min-h-screen bg-slate-950 flex flex-col">
             <h1 className="h-20 text-white bg-blue-800 flex items-center justify-center text-xl font-semibold w-full">
@@ -68,7 +76,6 @@ export default function Inscription({ navigation, setUser }) {
                         Inscription
                     </h2>
 
-                    {/* Zone d'affichage des erreurs */}
                     {error && (
                         <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-lg mb-4 text-sm text-center">
                             {error}
@@ -80,9 +87,7 @@ export default function Inscription({ navigation, setUser }) {
                         className="flex flex-col gap-4"
                     >
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">
-                                Nom
-                            </label>
+                            <label className="text-slate-300 text-sm">Nom</label>
                             <input
                                 type="text"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -94,9 +99,7 @@ export default function Inscription({ navigation, setUser }) {
                         </div>
 
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">
-                                Prénom
-                            </label>
+                            <label className="text-slate-300 text-sm">Prénom</label>
                             <input
                                 type="text"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -108,9 +111,7 @@ export default function Inscription({ navigation, setUser }) {
                         </div>
 
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">
-                                Email
-                            </label>
+                            <label className="text-slate-300 text-sm">Email</label>
                             <input
                                 type="email"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 "
@@ -122,9 +123,7 @@ export default function Inscription({ navigation, setUser }) {
                         </div>
 
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">
-                                Mot de passe
-                            </label>
+                            <label className="text-slate-300 text-sm">Mot de passe</label>
                             <input
                                 type="password"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -136,9 +135,7 @@ export default function Inscription({ navigation, setUser }) {
                         </div>
 
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">
-                                Confirmer le mot de passe
-                            </label>
+                            <label className="text-slate-300 text-sm">Confirmer le mot de passe</label>
                             <input
                                 type="password"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 "
@@ -147,7 +144,7 @@ export default function Inscription({ navigation, setUser }) {
                                 onChange={(e) =>
                                     setConfirmPassword(e.target.value)
                                 }
-                                placeholder="mot de passe"
+                                placeholder="confirmer mot de passe"
                             />
                         </div>
 
