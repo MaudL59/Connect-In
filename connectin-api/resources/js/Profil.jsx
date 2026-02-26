@@ -46,19 +46,44 @@ export default function Profil({ navigation, user, setUser }) {
     }
 
     // fonction pour le bouton enregistrement du nouveau email
-    function handleSaveEmail() {
+    async function handleSaveEmail() {
         if (isEditingEmail) {
-            // si le mot de passe actuel est correct
-            if (verificationPassword === user.password) {
-                // si oui on enregistre
-                setUser({ ...user, email: tempEmail });
-                setIsEditingEmail(false);
-                setVerificationPassword("");
-            } else {
-                // si non, on prévient l'utilisateur
-                alert("Mot de passe incorrect !");
+            try {
+                const response = await fetch(
+                    `http://127.0.0.1:8000/api/users/${user.id}`,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            // On récupère le token pour prouver qu'on est connecté
+                            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+                        },
+                        body: JSON.stringify({
+                            email: tempEmail,
+                            // Le nouvel email que l'on veut enregistrer
+                            password: verificationPassword, // Le mot de passe actuel pour vérification
+                        }),
+                    },
+                );
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Si le serveur confirme que tout est OK (Code 200)
+                    setUser({ ...user, email: tempEmail });
+                    setIsEditingEmail(false);
+                    setVerificationPassword("");
+                    alert("Email mis à jour avec succès !");
+                } else {
+                    // Si le serveur renvoie une erreur (ex: Code 401 "Mot de passe incorrect")
+                    alert(data.message || "Erreur lors de la mise à jour.");
+                }
+            } catch (error) {
+                console.error("Erreur réseau :", error);
+                alert("Impossible de contacter le serveur.");
             }
         } else {
+            // Si l'input n'était pas ouvert, on l'affiche
             setIsEditingEmail(true);
         }
     }

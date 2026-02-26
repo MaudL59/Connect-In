@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; // On ajoute ça pour aider l'IDE
 use App\Interfaces\UserRepositoryInterface;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -14,28 +15,31 @@ class UserController extends Controller
     public function add(Request $request)
     {
 
-        // 1. Validation stricte des données
+        // Validation stricte des données
         $validated = $request->validate([
             'first_name' => 'required|string',
             'last_name'  => 'required|string',
-            'email'      => 'required|email|unique:users,email', // Vérifie que l'email n'existe pas déjà
-            'password'   => 'required|string|confirmed',   // Nécessite un champ password_confirmation
+            'email'      => 'required|email|unique:users,email', 
+            // Vérifie que l'email n'existe pas déjà
+            'password'   => 'required|string|confirmed',   
+            // Nécessite un champ password_confirmation
         ]);
 
-        // 2. Création de l'utilisateur via le Repository
+        // Création de l'utilisateur via le Repository
         $user = $this->users->create([
             'first_name' => $validated['first_name'],
             'last_name'  => $validated['last_name'],
             'email'      => $validated['email'],
-            'password'   => bcrypt($validated['password']), // Toujours crypter le mot de passe !
+            'password'   => bcrypt($validated['password']), 
+            // Toujours crypter le mot de passe !
         ]);
 
-        // 3. Réponse
+        // Réponse
         return response()->json([
             'message' => 'Bienvenue parmi nous ! Ton compte a été créé.',
             'user'    => [
-                'id'    => $user->id,
-                'email' => $user->email
+            'id'    => $user->id,
+            'email' => $user->email
             ]
         ], 201); // 201 = Créé avec succès
     }
@@ -70,6 +74,12 @@ class UserController extends Controller
         if (Auth::id() !== (int)$id) {
             return response()->json(['message' => 'C\'est le profil d\'un autre utilisateur'], 403);
         }
+
+        if (!Hash::check($request->input('password'), $user->password)) {
+            return response()->json([
+            'message' => 'Mot de passe actuel incorrect'
+            ], 401);
+        }
         // validation de l'image
         $request->validate([
             'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
@@ -77,11 +87,12 @@ class UserController extends Controller
             'last_name' => 'string|max:255',
         ]);
         // ce que l'utilisateur peut modifier
-        $data = [
-            'first_name' => $request->input('first_name'),
-            'last_name'  => $request->input('last_name'),
-            'email'      => $request->input('email'),
-        ];
+        $data = [];
+
+        if ($request->filled('first_name')) $data['first_name'] = $request->input('first_name');
+        if ($request->filled('last_name'))  $data['last_name']  = $request->input('last_name');
+        if ($request->filled('email'))      $data['email']      = $request->input('email');
+
         //  Gestion de l'upload
         if ($request->hasFile('profile_photo')) {
             // Supprimer l'ancienne photo si elle existe
@@ -92,10 +103,7 @@ class UserController extends Controller
             $path = $request->file('profile_photo')->store('avatars', 'public');
             $data['profile_photo_path'] = $path;
         }
-        // On ne change le mot de passe QUE s'il est envoyé dans la requête
-        if ($request->has('password')) {
-            $data['password'] = bcrypt($request->input('password'));
-        }
+        
         // mise a jour du profil
         $this->users->update($id, $data);
         // On recharge l'utilisateur pour renvoyer la nouvelle URL de photo
