@@ -179,18 +179,6 @@ export default function Accueil({ navigation, user, setUser }) {
                 <div className="flex flex-col gap-6 mt-4">
 
                     {posts.map((post) => (
-<<<<<<< HEAD
-                        <div
-                            key={post.id}
-                            className="bg-slate-900 border border-slate-800 p-4 rounded-xl"
-                        >
-                            <h3 className="text-blue-400 font-bold">
-                                {post.user.name}
-                            </h3>
-                            <p className="mt-2 text-slate-300">
-                                {post.content}
-                            </p>
-=======
                         <div key={post.id} className="bg-slate-900 border border-slate-800 p-4 rounded-xl">
                             {/* la photo de profil dans le post */}
                             {post.user && (
@@ -202,7 +190,6 @@ export default function Accueil({ navigation, user, setUser }) {
                             )}
                             <h3 className="text-blue-400 font-bold">{post.user ? post.user.name : "Utilisateur supprimé"}</h3>
                             <p className="mt-2 text-slate-300">{post.content}</p>
->>>>>>> 7e76030d88528445fc13d71c09209fe45039f349
                             {/* AFFICHAGE DE L'IMAGE SI ELLE EXISTE */}
                             {post.image_path && (
                                 <img
@@ -214,29 +201,6 @@ export default function Accueil({ navigation, user, setUser }) {
 
                             {/* Interactions */}
                             <div className="flex gap-4 mt-4 text-sm text-slate-400 border-t border-slate-800 pt-3">
-<<<<<<< HEAD
-                                <button className="hover:text-white">
-                                    👍 {post.likes_count} Likes
-                                </button>
-                                <button className="hover:text-white">
-                                    💬 {post.comments_count} Commentaires
-                                </button>
-                            </div>
-                            {/* Liste des commentaires existants */}
-                            <div className="flex flex-col gap-2 mb-4">
-                                {post.comments &&
-                                    post.comments.map((comment) => (
-                                        <div
-                                            key={comment.id}
-                                            className="bg-slate-800 p-2 rounded text-sm"
-                                        >
-                                            <span className="font-bold text-blue-400">
-                                                {comment.user.name} :{" "}
-                                            </span>
-                                            <span>{comment.content}</span>
-                                        </div>
-                                    ))}
-=======
                                 <button className="hover:text-white">👍 {post.likes_count ?? 0} Likes</button>
                                 <button className="hover:text-white">💬 {post.comments_count ?? 0} Commentaires</button>
                             </div>
@@ -248,7 +212,6 @@ export default function Accueil({ navigation, user, setUser }) {
                                         <span>{comment.content}</span>
                                     </div>
                                 ))}
->>>>>>> 7e76030d88528445fc13d71c09209fe45039f349
                             </div>
                             {/* Formulaire pour ajouter un commentaire */}
                             <div className="flex gap-2">
