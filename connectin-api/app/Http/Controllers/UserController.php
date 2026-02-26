@@ -5,16 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; // On ajoute ça pour aider l'IDE
 use App\Interfaces\UserRepositoryInterface;
-
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function __construct(private UserRepositoryInterface $users)
-    {
-    }
+    public function __construct(private UserRepositoryInterface $users) {}
     // Inscription d'un nouvel utilisateur
-    public function add(Request $request) {
-        
+    public function add(Request $request)
+    {
+
         // 1. Validation stricte des données
         $validated = $request->validate([
             'first_name' => 'required|string',
@@ -41,67 +40,88 @@ class UserController extends Controller
         ], 201); // 201 = Créé avec succès
     }
     // permettre à n'importe quel utilisateur de voir le profil d'un autre membre
-    public function show($id){
+    public function show($id)
+    {
         $user = $this->users->find($id);
 
-        if(!$user){
+        if (!$user) {
             return response()->json(['message' => 'Utilisateur introuvable'], 404);
-             // erreur 404 Si on cherche un utilisateur qui n'existe plus.
-        }        
-       
-         return response()->json($user, 200);
+            // erreur 404 Si on cherche un utilisateur qui n'existe plus.
+        }
+
+        return response()->json($user, 200);
         //  200 = succés
     }
 
 
     // permet à l'utilisateur de modifier son profil
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
 
         $user = $this->users->find($id);
         // on recherche l'utilisateur
-        if(!$user){
+        if (!$user) {
             return response()->json(['message' => 'Utilisateur introuvable'], 404);
             // erreur 404 Si on cherche un utilisateur qui n'existe plus.
         }
-            
+
 
         //  si un utilisaseur tente de modifier le profil d'un autre
-        if (Auth::id() !== (int)$id) { 
-             return response()->json(['message' => 'C\'est le profil d\'un autre utilisateur'], 403);
-           
+        if (Auth::id() !== (int)$id) {
+            return response()->json(['message' => 'C\'est le profil d\'un autre utilisateur'], 403);
         }
+        // validation de l'image
+        $request->validate([
+            'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'first_name' => 'string|max:255',
+            'last_name' => 'string|max:255',
+        ]);
         // ce que l'utilisateur peut modifier
         $data = [
             'first_name' => $request->input('first_name'),
             'last_name'  => $request->input('last_name'),
             'email'      => $request->input('email'),
         ];
-
+        //  Gestion de l'upload
+        if ($request->hasFile('profile_photo')) {
+            // Supprimer l'ancienne photo si elle existe
+            if ($user->profile_photo_path) {
+                Storage::disk('public')->delete($user->profile_photo_path);
+            }
+            // Stocker la nouvelle
+            $path = $request->file('profile_photo')->store('avatars', 'public');
+            $data['profile_photo_path'] = $path;
+        }
         // On ne change le mot de passe QUE s'il est envoyé dans la requête
         if ($request->has('password')) {
             $data['password'] = bcrypt($request->input('password'));
         }
         // mise a jour du profil
         $this->users->update($id, $data);
+        // On recharge l'utilisateur pour renvoyer la nouvelle URL de photo
+        $userUpdated = $this->users->find($id);
 
-        return response()->json(['message' => 'Profil mis à jour !'], 200); 
+        return response()->json([
+            'message' => 'Profil mis à jour !',
+            'user' => $userUpdated
+        ], 200);
         // 200 = succés
     }
 
-    public function delete(Request $request, $id) {
+    public function delete(Request $request, $id)
+    {
         $user = $this->users->find($id);
 
 
         // on recherche l'utilisateur
-        if(!$user){
+        if (!$user) {
             return response()->json(['message' => 'Utilisateur introuvable'], 404);
             // erreur 404 Si on cherche un utilisateur qui n'existe plus.
         }
 
         //  si un utilisaseur tente de suprimer le profil d'un autre on vérifie que c'est bien SON profil
-        if (Auth::id() !== (int)$id) { 
-             return response()->json(['message' => 'C\'est le profil d\'un autre utilisateur'], 403);
-           
+        if (Auth::id() !== (int)$id) {
+            return response()->json(['message' => 'C\'est le profil d\'un autre utilisateur'], 403);
         }
 
         // supression de tous les likes
@@ -119,11 +139,11 @@ class UserController extends Controller
         } else {
             // CAS 2 : On met en anonyme les posts et les commentaires
             $user->posts()->update(['content' => "Utilisateur suprimé"]);
-            
+
 
             $this->users->delete($id);
-            
+
             return response()->json(['message' => 'Compte anonymisé, contenus conservés'], 200);
+        }
     }
-}
 }

@@ -19,7 +19,7 @@ export default function Accueil({ navigation, user }) {
     // fonction de publication 
     const handleCreatePost = async () => {
         if (!content.trim() && !image) {
-            alert("Veuillez ajouter du texte ou une image !");
+            alert("Le post est vide !");
             return;
         }
 
@@ -33,18 +33,22 @@ export default function Accueil({ navigation, user }) {
         try {
             const response = await fetch("http://127.0.0.1:8000/api/posts", {
                 method: "POST",
-                body: formData, // On envoie le FormData (pas de JSON.stringify ici !)
+                body: formData, // On envoie le FormData 
                 headers: {
                     // verifie qui publie grâce au token 
-                    "Authorization": `Bearer ${localStorage.getItem('token')}`
+                    "Authorization": `Bearer ${localStorage.getItem('token')}`,
+                    "Accept": "application/json" // pour permettre à Laravel de repondre au json
                 }
             });
-
+            const result = await response.json(); // Regarde ce que le serveur répond
             if (response.ok) {
                 setContent("");
                 setImage(null);
                 setShowForm(false);
                 fetchPosts(); // Recharge la liste pour voir le nouveau post
+            } else {
+                // Si Laravel renvoie une erreur, tu la verras ici
+                alert("Erreur du serveur : " + (result.message || "Impossible de publier"));
             }
         } catch (error) {
             console.error("Erreur publication :", error);
@@ -124,6 +128,7 @@ export default function Accueil({ navigation, user }) {
                     </button>
                 </div>
                 {/* Formulaire de création (apparaît si showForm est true) */}
+
                 {showForm && (
                     <div className="bg-slate-900 p-4 rounded-lg border border-slate-800 flex flex-col gap-3">
                         <textarea
@@ -149,11 +154,21 @@ export default function Accueil({ navigation, user }) {
                         </button>
                     </div>
                 )}
+
                 {/* LISTE DES POSTS (Le Feed) */}
                 <div className="flex flex-col gap-6 mt-4">
+
                     {posts.map((post) => (
                         <div key={post.id} className="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                            <h3 className="text-blue-400 font-bold">{post.user.name}</h3>
+                            {/* la photo de profil dans le post */}
+                            {post.user && (
+                                <img
+                                    src={post.user.avatar}
+                                    alt="Avatar"
+                                    className="w-10 h-10 rounded-full border border-blue-500 shadow-sm mb-2"
+                                />
+                            )}
+                            <h3 className="text-blue-400 font-bold">{post.user ? post.user.name : "Utilisateur supprimé"}</h3>
                             <p className="mt-2 text-slate-300">{post.content}</p>
                             {/* AFFICHAGE DE L'IMAGE SI ELLE EXISTE */}
                             {post.image_path && (
@@ -167,14 +182,14 @@ export default function Accueil({ navigation, user }) {
 
                             {/* Interactions */}
                             <div className="flex gap-4 mt-4 text-sm text-slate-400 border-t border-slate-800 pt-3">
-                                <button className="hover:text-white">👍 {post.likes_count} Likes</button>
-                                <button className="hover:text-white">💬 {post.comments_count} Commentaires</button>
+                                <button className="hover:text-white">👍 {post.likes_count ?? 0} Likes</button>
+                                <button className="hover:text-white">💬 {post.comments_count ?? 0} Commentaires</button>
                             </div>
                             {/* Liste des commentaires existants */}
                             <div className="flex flex-col gap-2 mb-4">
                                 {post.comments && post.comments.map((comment) => (
                                     <div key={comment.id} className="bg-slate-800 p-2 rounded text-sm">
-                                        <span className="font-bold text-blue-400">{comment.user.name} : </span>
+                                        <span className="font-bold text-blue-400">{comment.user ? comment.user.name : "Utilisateur supprimé"} :{" "} </span>
                                         <span>{comment.content}</span>
                                     </div>
                                 ))}

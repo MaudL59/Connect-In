@@ -46,7 +46,8 @@ class PostController extends Controller
                 // Auteur du post
                 'user' => [
                     'id' => $post->user->id ?? null,
-                    'name' => $post->user->full_name ?? null
+                    'name' => $post->user->full_name ?? null,
+                    'avatar' => $post->user->profile_photo_url,
                 ],
 
                 // Nombre de commentaires et likes
