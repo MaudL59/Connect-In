@@ -47,12 +47,23 @@ class PostController extends Controller
                 'user' => [
                     'id' => $post->user->id ?? null,
                     'name' => $post->user->full_name ?? null,
-                    'avatar' => $post->user->profile_photo_url,
+                    'avatar' => $post->user->profile_photo_url ?? null,
                 ],
 
                 // Nombre de commentaires et likes
                 'comments_count' => $post->comments->count(),
                 'likes_count' => $post->likes->count(),
+                // on renvoie tous les commentaires sur un post 
+                'comments' => $post->comments->map(function ($comment) {
+                    return [
+                        'id'      => $comment->id,
+                        'content' => $comment->content,
+                        'user'    => [
+                            'id'   => $comment->user->id ?? null,
+                            'name' => $comment->user->full_name ?? null,
+                        ],
+                    ];
+                }),
 
                 // Date lisible en français
                 'created_at' => Carbon::parse($post->created_at)->diffForHumans()
@@ -86,28 +97,47 @@ class PostController extends Controller
     public function add(Request $request)
     {
 
-        // 1. Validation : On vérifie que le contenu n'est pas vide
+        //  Validation : On vérifie que le contenu n'est pas vide
         $validated = $request->validate([
             'content' => 'required|string', // Limite style 
-            'image_path' => 'nullable|string'       // L'image est optionnelle
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048' // accepte l'image
         ]);
 
-        // 2. Récupération de l'ID de l'utilisateur connecté
+        //  Récupération de l'ID de l'utilisateur connecté
         $user_id = Auth::id();
 
-        // 3. Création via le Repository
+        //Gestion upload l'image
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            // stocke dans storage/app/public/posts
+            $path = $request->file('image')->store('posts', 'public');
+
+            // crée URL accessible depuis React
+            $imagePath = asset('storage/' . $path);
+        }
+
+        //  Création  du post 
         $post = $this->posts->create([
             'user_id' => $user_id,
             'content' => $validated['content'],
-            'image_path' => $validated['image_path'] ?? null
+            'image_path' => $imagePath
         ]);
 
-        // 4. Réponse au format JSON
+        //  Réponse au format JSON
         return response()->json([
-            'message' => 'Post ajouté avec succès !',
-            'post' => $post,
-            'human_date' => Carbon::parse($post->created_at)->diffForHumans()
-        ], 201); // 201 = Création réussie
+        'message' => 'Post ajouté avec succès !',
+        'post' => [
+            'id' => $post->id,
+            'content' => $post->content,
+            'image_path' => $post->image_path, // url de l'image contenu dans le post 
+            'user' => [
+                'id' => $post->user->id,
+                'name' => $post->user->full_name,
+                'avatar' => $post->user->profile_photo_url
+            ],
+            'created_at' => Carbon::parse($post->created_at)->diffForHumans()
+        ]
+    ], 201);// 201 = Création réussie
     }
     // Fonction pour récupérer UN post spécifique par son ID
     public function show($id)
@@ -130,7 +160,7 @@ class PostController extends Controller
                 'name' => $post->user->full_name ?? null
             ],
             // Chargement des relations pour voir les commentaires et likes liés
-            'comments' => $post->comments, 
+            'comments' => $post->comments,
             'likes_count' => $post->likes->count(),
             'created_at' => Carbon::parse($post->created_at)->diffForHumans()
         ];
