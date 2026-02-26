@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function Inscription({ navigation }) {
+export default function Inscription({ navigation, setUser }) {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -40,7 +40,9 @@ export default function Inscription({ navigation }) {
 
             if (response.ok) {
                 alert("Inscription réussie ! Connectez-vous maintenant.");
-                navigation("login");
+                setUser(data.user);
+                localStorage.setItem("token", data.access_token);
+                navigation("accueil");
             } else {
                 // On affiche les erreurs précises renvoyées par Laravel
                 setError(data.message || "L'inscription a échoué.");
