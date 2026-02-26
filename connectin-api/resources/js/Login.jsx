@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 
-export default function Login({ navigation }) {
+export default function Login({ navigation, setUser }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState(""); 
+    const [error, setError] = useState("");
 
     async function handleSubmit(e) {
         e.preventDefault();
-        setError(""); 
+        setError("");
 
         try {
             const response = await fetch("http://127.0.0.1:8000/api/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Accept": "application/json",
+                    Accept: "application/json",
                 },
                 body: JSON.stringify({
                     email: email,
@@ -28,7 +28,7 @@ export default function Login({ navigation }) {
                 // CORRECTION ICI : data.token devient data.access_token
                 // car c'est ce que tu as écrit dans ton AuthentificationController.php
                 localStorage.setItem("access_token", data.access_token);
-                
+                setUser(data.user);
                 alert("Connexion réussie !");
                 navigation("accueil"); // Redirection vers l'accueil
             } else {
@@ -36,7 +36,9 @@ export default function Login({ navigation }) {
                 setError(data.message || "Email ou mot de passe invalide.");
             }
         } catch (err) {
-            setError("Le serveur ne répond pas. Vérifie MAMP ou php artisan serve.");
+            setError(
+                "Le serveur ne répond pas. Vérifie MAMP ou php artisan serve.",
+            );
         }
     }
 
@@ -57,9 +59,14 @@ export default function Login({ navigation }) {
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                    <form
+                        onSubmit={handleSubmit}
+                        className="flex flex-col gap-4"
+                    >
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">Email</label>
+                            <label className="text-slate-300 text-sm">
+                                Email
+                            </label>
                             <input
                                 type="email"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -71,7 +78,9 @@ export default function Login({ navigation }) {
                         </div>
 
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">Mot de passe</label>
+                            <label className="text-slate-300 text-sm">
+                                Mot de passe
+                            </label>
                             <input
                                 type="password"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -82,11 +91,17 @@ export default function Login({ navigation }) {
                             />
                         </div>
 
-                        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition-colors mt-2">
+                        <button
+                            type="submit"
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition-colors mt-2"
+                        >
                             Se connecter
                         </button>
 
-                        <p className="text-slate-400 text-sm text-center mt-4 cursor-pointer hover:underline" onClick={() => navigation("inscription")}>
+                        <p
+                            className="text-slate-400 text-sm text-center mt-4 cursor-pointer hover:underline"
+                            onClick={() => navigation("inscription")}
+                        >
                             Pas encore inscrit ? Cliquez ici
                         </p>
                     </form>

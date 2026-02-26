@@ -16,7 +16,7 @@ export default function App() {
         password: "",
     });
     const pages = {
-        login: <Login navigation={setPage} />,
+        login: <Login navigation={setPage} setUser={setUser} />,
         inscription: <Inscription navigation={setPage} setUser={setUser} />,
         accueil: <Accueil navigation={setPage} user={user} />,
         profil: <Profil navigation={setPage} user={user} setUser={setUser} />,
