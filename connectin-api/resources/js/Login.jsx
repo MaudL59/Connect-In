@@ -42,6 +42,8 @@ export default function Login({ navigation, setUser }) {
         }
     }
 
+    
+
     return (
         <div className="min-h-screen bg-slate-950 flex flex-col">
             <h1 className="h-20 text-white bg-blue-800 flex items-center justify-center text-xl font-semibold w-full">
