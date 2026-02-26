@@ -104,6 +104,10 @@ class UserController extends Controller
             $data['profile_photo_path'] = $path;
         }
         
+        // mise a jour du nouveau mot de passe apres l'avoir modifier
+        if ($request->filled('new_password')) {
+        $data['password'] = $request->input('new_password');
+        }
         // mise a jour du profil
         $this->users->update($id, $data);
         // On recharge l'utilisateur pour renvoyer la nouvelle URL de photo

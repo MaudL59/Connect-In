@@ -21,24 +21,85 @@ export default function Profil({ navigation, user, setUser }) {
     const [confirmPassword, setConfirmPassword] = useState("");
 
     // fonction pour le bouton enregistrement du nouveau nom
-    function handleSaveLastName() {
+    async function handleSaveLastName() {
         if (isEditingLastName) {
-            // On enregistre les changements pour que seul le nom change
-            setUser({ ...user, last_name: tempLastName });
-            // On ferme l'input
-            setIsEditingLastName(false);
+            try {
+                const response = await fetch(
+                    `http://127.0.0.1:8000/api/users/${user.id}`,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+                        },
+                        body: JSON.stringify({
+                            last_name: tempLastName,
+                            password: verificationPassword,
+                        }),
+                    },
+                );
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // On enregistre les changements pour que seul le nom change
+                    setUser({ ...user, last_name: tempLastName });
+                    // On ferme l'input
+                    setIsEditingLastName(false);
+                    setVerificationPassword("");
+                    alert("Nom mis à jour !");
+                } else {
+                    // Si le serveur refuse (ex: mauvais MDP)
+                    alert(data.message || "Erreur lors de la modification");
+                }
+            } catch (error) {
+                // Si la connexion a échoué (réseau, serveur éteint)
+                console.error("Erreur critique :", error);
+                alert("Impossible de joindre le serveur.");
+            }
         } else {
             // Si c'était fermé, on l'ouvre
             setIsEditingLastName(true);
         }
     }
+
     // fonction pour le bouton enregistrement du nouveau prenom
-    function handleSaveFirstName() {
+    async function handleSaveFirstName() {
         if (isEditingFirstName) {
-            // On enregistre les changements pour que seul le prenom change
-            setUser({ ...user, first_name: tempFirstName });
-            // On ferme l'input
-            setIsEditingFirstName(false);
+            try {
+                const response = await fetch(
+                    `http://127.0.0.1:8000/api/users/${user.id}`,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+                        },
+                        body: JSON.stringify({
+                            first_name: tempFirstName,
+                            password: verificationPassword,
+                        }),
+                    },
+                );
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // On enregistre les changements pour que seul le prenom change
+                    setUser({ ...user, first_name: tempFirstName });
+                    // On ferme l'input
+                    setIsEditingFirstName(false);
+                    setVerificationPassword("");
+                    alert("Prenom mis à jour !");
+                } else {
+                    // Si le serveur refuse (ex: mauvais MDP)
+                    alert(data.message || "Erreur lors de la modification");
+                }
+            } catch (error) {
+                // Si la connexion a échoué (réseau, serveur éteint)
+                console.error("Erreur critique :", error);
+                alert("Impossible de joindre le serveur.");
+            }
         } else {
             // Si c'était fermé, on l'ouvre
             setIsEditingFirstName(true);
@@ -89,26 +150,48 @@ export default function Profil({ navigation, user, setUser }) {
     }
 
     // fonction pour le bouton enregistrement du nouveau mot de passe
-    function handleSavePassword() {
+    async function handleSavePassword() {
         if (isEditingPassword) {
-            // si le mot de passe actuel est correct
-            if (verificationPassword === user.password) {
-                // confirmé le nouveau mot de passe
-                if (tempPassword === confirmPassword) {
-                    // si oui, enregistre
-                    setUser({ ...user, password: tempPassword });
+            // verifie la correspondance entre le mot de passe et la la confirmation mot de passe
+            if (tempPassword !== confirmPassword) {
+                alert(
+                    "Le nouveau mot de passe et sa confirmation ne correspondent pas.",
+                );
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    `http://127.0.0.1:8000/api/users/${user.id}`,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+                        },
+                        body: JSON.stringify({
+                            password: verificationPassword,
+                            // mot de passe actuel (pour le Hash::check)
+                            new_password: tempPassword,
+                            // le nouveau (à enregistrer)
+                        }),
+                    },
+                );
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert("Mot de passe mis à jour !");
                     setIsEditingPassword(false);
                     setVerificationPassword("");
+                    setTempPassword("");
                     setConfirmPassword("");
                 } else {
-                    // si sa ne correspond pas
-                    alert(
-                        "Le nouveau mot de passe et sa confirmation ne correspondent pas.",
-                    );
+                    alert(data.message || "Erreur lors de la modification");
                 }
-            } else {
-                // si le mot passe actuel saisie est incorrect
-                alert("Mot de passe actuel incorrect !");
+            } catch (error) {
+                console.error("Erreur réseau :", error);
+                alert("Impossible de joindre le serveur.");
             }
         } else {
             setIsEditingPassword(true);
@@ -150,14 +233,28 @@ export default function Profil({ navigation, user, setUser }) {
                             <div className="flex flex-col">
                                 <span className="text-slate-400">Nom</span>
                                 {isEditingLastName ? (
-                                    <input
-                                        type="text"
-                                        className="bg-slate-800 text-white p-1 rounded border border-blue-500"
-                                        value={tempLastName}
-                                        onChange={(e) =>
-                                            setTempLastName(e.target.value)
-                                        }
-                                    />
+                                    <div className="flex flex-col gap-2 py-2">
+                                        <input
+                                            type="text"
+                                            value={tempLastName}
+                                            onChange={(e) =>
+                                                setTempLastName(e.target.value)
+                                            }
+                                            className="bg-slate-800 text-white p-1 rounded border border-blue-500"
+                                        />
+                                        {/* L'input indispensable pour le Hash::check */}
+                                        <input
+                                            type="password"
+                                            placeholder="Confirmer avec votre mot de passe"
+                                            value={verificationPassword}
+                                            onChange={(e) =>
+                                                setVerificationPassword(
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className="bg-slate-800 text-white p-1 rounded border border-blue-500"
+                                        />
+                                    </div>
                                 ) : (
                                     <span className="text-white">
                                         {user.last_name}
@@ -176,14 +273,28 @@ export default function Profil({ navigation, user, setUser }) {
                             <div className="flex flex-col">
                                 <span className="text-slate-400">Prénom</span>
                                 {isEditingFirstName ? (
-                                    <input
-                                        type="text"
-                                        className="bg-slate-800 text-white p-1 rounded border border-blue-500"
-                                        value={tempFirstName}
-                                        onChange={(e) =>
-                                            setTempFirstName(e.target.value)
-                                        }
-                                    />
+                                    <div className="flex flex-col gap-2 py-2">
+                                        <input
+                                            type="text"
+                                            className="bg-slate-800 text-white p-1 rounded border border-blue-500"
+                                            value={tempFirstName}
+                                            onChange={(e) =>
+                                                setTempFirstName(e.target.value)
+                                            }
+                                        />
+                                        {/* L'input indispensable pour le Hash::check */}
+                                        <input
+                                            type="password"
+                                            placeholder="Confirmer avec votre mot de passe"
+                                            value={verificationPassword}
+                                            onChange={(e) =>
+                                                setVerificationPassword(
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className="bg-slate-800 text-white p-1 rounded border border-blue-500"
+                                        />{" "}
+                                    </div>
                                 ) : (
                                     <span className="text-white">
                                         {user.first_name}
