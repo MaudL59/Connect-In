@@ -68,7 +68,6 @@ export default function Accueil({ navigation, user, setUser }) {
         }
     };
     // fonction qui permet de pouvoir commenter un post
-    // Ajoute cet état en haut de ton composant
     const handleAddComment = async (postId) => {
         const text = commentTexts[postId];
         if (!text) return;
