@@ -25,24 +25,27 @@ export default function Login({ navigation, setUser }) {
             const data = await response.json();
 
             if (response.ok) {
-                // CORRECTION ICI : data.token devient data.access_token
-                // car c'est ce que tu as écrit dans ton AuthentificationController.php
+                // 1. On stocke le token pour rester connecté
                 localStorage.setItem("access_token", data.access_token);
+
+                // 2. CORRECTION CRITIQUE : On stocke les infos de l'utilisateur
+                // Sans cette ligne, App.js reprend les vieilles infos (Aminata) au rafraîchissement
+                localStorage.setItem("user_data", JSON.stringify(data.user));
+
+                // 3. On met à jour l'état actuel de l'application
                 setUser(data.user);
+
                 alert("Connexion réussie !");
-                navigation("accueil"); // Redirection vers l'accueil
+                navigation("accueil"); 
             } else {
-                // Laravel renvoie le message "Identifiants incorrects"
                 setError(data.message || "Email ou mot de passe invalide.");
             }
         } catch (err) {
             setError(
-                "Le serveur ne répond pas. Vérifie MAMP ou php artisan serve.",
+                "Le serveur ne répond pas. Vérifie ton terminal (php artisan serve).",
             );
         }
     }
-
-    
 
     return (
         <div className="min-h-screen bg-slate-950 flex flex-col">
