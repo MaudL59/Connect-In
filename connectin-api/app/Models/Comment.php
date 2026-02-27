@@ -11,7 +11,7 @@ class Comment extends Model
     public function user(){
         return $this->belongsTo(User::class);//ici on utilise belongsTo car le commentaire appartient à un seul user
     } 
-    public function posts(){
+    public function post(){
         return $this->belongsTo(Post::class);// pareil ici 
     }
 }

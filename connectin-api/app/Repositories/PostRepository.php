@@ -7,8 +7,8 @@ use App\Models\Post;
 
 class PostRepository implements PostRepositoryInterface 
 {
-    public function all() { // permet de d'afficher tous les posts liés à un utilisateur et son commentaire
-        return Post::with(['user', 'comments'])->latest()->get();
+    public function all() { // permet de d'afficher tous les posts liés à un utilisateur et son commentaire, également compter les commentaires et likes qui sont associées 
+        return Post::with(['user', 'comments.user'])->withCount(['comments', 'likes'])->latest()->get();
     }
 
     public function find(int $id) { // permet d'afficher un post lié à un utilisateur specifique

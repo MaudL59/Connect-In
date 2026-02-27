@@ -4,6 +4,7 @@ namespace App\Interfaces;
 
 interface PostRepositoryInterface 
 {
+
    public function all();                         // READ (tous)
     public function find(int $id);                // READ (un seul)
     public function create(array $data);           // CREATE
