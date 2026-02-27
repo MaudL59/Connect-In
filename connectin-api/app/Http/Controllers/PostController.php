@@ -43,32 +43,38 @@ class PostController extends Controller
                 'content' => $post->content,
                 'image_path' => $post->image_path,
 
-                // Auteur du post
-                'user' => [
-                    'id' => $post->user->id ?? null,
-                    'name' => $post->user->full_name ?? null,
-                    'avatar' => $post->user->profile_photo_url ?? null,
+               
+                // Auteur du post avec sécurité si l'user est NULL
+                'user' => $post->user ? [
+                'id' => $post->user->id,
+                'name' => $post->user->full_name,
+                'avatar' => $post->user->profile_photo_url,
+                ] : [
+                'id' => null,
+                'name' => "Utilisateur supprimé",
+                'avatar' => null,
+                 ],
+
+                'comments_count' => $post->comments_count ?? 0, 
+                'likes_count' => $post->likes_count ?? 0,
+
+                'comments' => $post->comments ? $post->comments->map(function ($comment) {
+            return [
+                'id' => $comment->id,
+                'content' => $comment->content,
+                'user' => $comment->user ? [
+                'id' => $comment->user->id,
+                'name' => $comment->user->full_name,
+                ] : [
+                'id' => null,
+                'name' => "Anonyme"
                 ],
-
-                // Nombre de commentaires et likes
-                'comments_count' => $post->comments->count(),
-                'likes_count' => $post->likes->count(),
-                // on renvoie tous les commentaires sur un post 
-                'comments' => $post->comments->map(function ($comment) {
-                    return [
-                        'id'      => $comment->id,
-                        'content' => $comment->content,
-                        'user'    => [
-                            'id'   => $comment->user->id ?? null,
-                            'name' => $comment->user->full_name ?? null,
-                        ],
-                    ];
-                }),
-
-                // Date lisible en français
-                'created_at' => Carbon::parse($post->created_at)->diffForHumans()
             ];
-        });
+        }) : [],
+
+    'created_at' => $post->created_at ? \Carbon\Carbon::parse($post->created_at)->diffForHumans() : "Maintenant"
+    ];
+});
 
         return response()->json($formattedPosts, 200);
     }
@@ -128,15 +134,19 @@ class PostController extends Controller
         return response()->json([
             'message' => 'Post ajouté avec succès !',
             'post' => [
-                'id' => $post->id,
-                'content' => $post->content,
-                'image_path' => $post->image_path, // url de l'image contenu dans le post 
-                'user' => [
-                    'id' => $post->user->id,
-                    'name' => $post->user->full_name,
-                    'avatar' => $post->user->profile_photo_url
-                ],
-                'created_at' => Carbon::parse($post->created_at)->diffForHumans()
+            'id' => $post->id,
+            'content' => $post->content,
+            'image_path' => $post->image_path, // url de l'image contenu dans le post 
+            'user' => $post->user ? [
+                'id' => $post->user->id,
+                'name' => $post->user->full_name,
+                'avatar' => $post->user->profile_photo_url
+            ] : [
+                'id' => null,
+                'name' => "Utilisateur inconnu",
+                'avatar' => null
+            ],
+            'created_at' => $post->created_at ? \Carbon\Carbon::parse($post->created_at)->diffForHumans() : "Maintenant"
             ]
         ], 201); // 201 = Création réussie
     }
@@ -156,9 +166,12 @@ class PostController extends Controller
             'id' => $post->id,
             'content' => $post->content,
             'image_path' => $post->image_path,
-            'user' => [
-                'id' => $post->user->id ?? null,
-                'name' => $post->user->full_name ?? null
+            'user' => $post->user ? [
+            'id' => $post->user->id,
+            'name' => $post->user->full_name,
+                ] : [
+            'id' => null,
+            'name' => "Anonyme"
             ],
             // Chargement des relations pour voir les commentaires et likes liés
             'comments' => $post->comments,

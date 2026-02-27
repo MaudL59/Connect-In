@@ -23,7 +23,10 @@ return new class extends Migration
             // LA RELATION : Lien vers l'utilisateur qui publie
             // constrained() cherche automatiquement la table 'users'
             // onDelete('cascade') supprime les posts si l'utilisateur est supprimé
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
+
+            // Relation vers le post commenté
+            $table->foreignId('post_id')->constrained()->onDelete('cascade');
 
             $table->timestamps();
         });
@@ -34,7 +37,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('comments');
     }
 };
 ?>
