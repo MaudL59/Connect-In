@@ -36,7 +36,7 @@ export default function Login({ navigation, setUser }) {
                 setUser(data.user);
 
                 alert("Connexion réussie !");
-                navigation("accueil"); 
+                navigation("accueil");
             } else {
                 setError(data.message || "Email ou mot de passe invalide.");
             }
@@ -98,7 +98,7 @@ export default function Login({ navigation, setUser }) {
 
                         <button
                             type="submit"
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition-colors mt-2"
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 cursor-pointer rounded-lg transition-colors mt-2"
                         >
                             Se connecter
                         </button>

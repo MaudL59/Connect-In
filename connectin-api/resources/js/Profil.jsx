@@ -409,7 +409,9 @@ export default function Profil({ navigation, user, setUser }) {
                         </div>
                     </div>
 
-                    <button className="text-red-600">Suprimer le compte</button>
+                    <button className="text-red-600 cursor-pointer">
+                        Suprimer le compte
+                    </button>
                 </div>
             </div>
         </div>
