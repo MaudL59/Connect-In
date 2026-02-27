@@ -7,6 +7,8 @@ import Inscription from "./Inscription";
 import Profil from "./Profil";
 import Accueil from "./Accueil";
 import ProfilPublic from "./Profilpublic";
+import Messagerie from "./Messagerie";
+
 
 
 export default function App() {
@@ -38,6 +40,7 @@ export default function App() {
         profil: <Profil navigation={setPage} user={user} setUser={setUser} />,
         // ICI : On passe visitedUser (l'autre) et non user (toi) !
         ProfilPublic: <ProfilPublic navigation={setPage} user={visitedUser} />,
+        messagerie: <Messagerie user={user} userVisite={visitedUser} navigation={setPage} />
     };
 
     return <div className="App">{pages[page]}</div>;
