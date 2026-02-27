@@ -6,6 +6,8 @@ import Login from "./Login";
 import Inscription from "./Inscription";
 import Profil from "./Profil";
 import Accueil from "./Accueil";
+import ProfilPublic from "./Profilpublic";
+
 
 export default function App() {
     //  On vérifie si un token existe déjà dans le navigateur
@@ -13,7 +15,7 @@ export default function App() {
 
     //  Si le token existe, on commence sur "accueil", sinon sur "login"
     const [page, setPage] = useState(tokenExiste ? "accueil" : "login");
-    
+
     const [user, setUser] = useState({
         last_name: "",
         first_name: "",
@@ -33,6 +35,8 @@ export default function App() {
         inscription: <Inscription navigation={setPage} setUser={setUser} />,
         accueil: <Accueil navigation={setPage} user={user} />,
         profil: <Profil navigation={setPage} user={user} setUser={setUser} />,
+        ProfilPublic: <ProfilPublic navigation={setPage} user={user} setUser={setUser} />,
+
     };
 
     return <div className="App">{pages[page]}</div>;

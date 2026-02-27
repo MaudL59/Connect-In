@@ -284,7 +284,8 @@ export default function Accueil({ navigation, user, setUser }) {
                                             className="w-10 h-10 rounded-full"
                                             alt="avatar"
                                         />
-                                        <span>{u.full_name}</span>
+                                        <span onClick={() => navigation("ProfilPublic")}
+                                        >{u.full_name}</span>
                                     </div>
                                 ))}
                             </div>
@@ -336,25 +337,25 @@ export default function Accueil({ navigation, user, setUser }) {
                                     <div className="text-xs text-slate-400">{post.created_at}</div>
                                 </div>
                             </div>
-                             {/*  BOUTONS MODIFIER / SUPPRIMER (seulement si c'est mon post) */}
-                {post.user?.id === user.id && (
-                    <div className="flex gap-2">
-                        <button
-                            onClick={() => handleUpdatePost(post.id, post.content)}
-                            className="text-green-400 px-3 py-1 rounded-lg border border-green-400 hover:bg-green-400 hover:text-black transition-all text-sm font-semibold"
-                            title="Modifier le post"
-                        >
-                             Modifier
-                        </button>
-                        <button
-                            onClick={() => handleDeletePost(post.id)}
-                            className="text-red-400 px-3 py-1 rounded-lg border border-red-400 hover:bg-red-400 hover:text-white transition-all text-sm font-semibold"
-                            title="Supprimer le post"
-                        >
-                             Supprimer
-                        </button>
-                    </div>
-                )}
+                            {/*  BOUTONS MODIFIER / SUPPRIMER (seulement si c'est mon post) */}
+                            {post.user?.id === user.id && (
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => handleUpdatePost(post.id, post.content)}
+                                        className="text-green-400 px-3 py-1 rounded-lg border border-green-400 hover:bg-green-400 hover:text-black transition-all text-sm font-semibold"
+                                        title="Modifier le post"
+                                    >
+                                        Modifier
+                                    </button>
+                                    <button
+                                        onClick={() => handleDeletePost(post.id)}
+                                        className="text-red-400 px-3 py-1 rounded-lg border border-red-400 hover:bg-red-400 hover:text-white transition-all text-sm font-semibold"
+                                        title="Supprimer le post"
+                                    >
+                                        Supprimer
+                                    </button>
+                                </div>
+                            )}
 
                             {/* Contenu */}
                             <p className="text-slate-300 mb-4 leading-relaxed">{post.content}</p>
