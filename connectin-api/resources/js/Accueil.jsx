@@ -263,6 +263,7 @@ export default function Accueil({ navigation, user, setUser }) {
                     navigation("login");
                 }} className="hover:underline">Déconnexion</button>
             </header>
+            
 
             <main className="max-w-2xl mx-auto space-y-6">
                 {/* Barre de recherche */}
@@ -297,6 +298,7 @@ export default function Accueil({ navigation, user, setUser }) {
                         {showForm ? "ANNULER" : "CRÉER POST"}
                     </button>
                 </div>
+                
 
                 {/* Formulaire création post */}
                 {showForm && (
