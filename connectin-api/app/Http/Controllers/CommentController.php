@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; // On ajoute ça pour aider l'IDE
 use App\Interfaces\CommentRepositoryInterface;
+use App\Models\Comment;
 
 
 class CommentController extends Controller
@@ -47,19 +48,22 @@ class CommentController extends Controller
 
     // Fonction de sauvegarde du commentaire
     public function save(Request $request) {
-       $user_id = Auth::id();
-        $post_id = $request->input('post_id');
-        $content = $request->input('content');
+       $validated = $request->validate([
+            'content' => 'required|string',
+            'post_id' => 'required|exists:posts,id'
+        ]);
         
     // Creation du commentaire
-        $this->comments->create([
-            'user_id' => $user_id, 
-            'post_id' => $post_id, 
-            'content' => $content]);
+        $comment = Comment::create([
+            'content' => $validated['content'],
+            'post_id' => $validated['post_id'],
+            'user_id' => Auth::id()
+        ]);
         
-        return response()->json(['message' => 'C\'est posté !'], 201);
+        return response()->json($comment, 201);
         // erreur 201 est Quand un utilisateur poste un Commentaire ou un Like.
     }
+   
     // Fonction de supression du commentaire 
     public function delete($id) {
         $comment = $this->comments->find($id);
