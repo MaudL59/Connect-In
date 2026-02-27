@@ -198,6 +198,47 @@ export default function Profil({ navigation, user, setUser }) {
         }
     }
 
+    // fonction pour suprimer son compte
+    async function handleDeleteAccount() {
+        // Première confirmation pour éviter les erreurs
+        const confirmFirst = window.confirm(
+            "Es-tu sûr de vouloir supprimer ton compte ?",
+        );
+        if (!confirmFirst) return;
+
+        // Deuxième confirmation pour le choix du contenu (RGPD)
+        const deleteContent = window.confirm(
+            "Souhaites-tu également supprimer tous tes posts et commentaires ? (OK pour tout supprimer, Annuler pour anonymiser)",
+        );
+
+        try {
+            const response = await fetch(
+                `http://127.0.0.1:8000/api/users/${user.id}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+                    },
+                    body: JSON.stringify({
+                        delete_content: deleteContent, // Envoie true (OK) ou false (Annuler)
+                    }),
+                },
+            );
+
+            if (response.ok) {
+                alert("Compte supprimé.");
+                localStorage.removeItem("access_token");
+                // Redirection vers la page de connexion
+                navigation("/login");
+            } else {
+                alert("Erreur lors de la suppression");
+            }
+        } catch (error) {
+            console.error("Erreur:", error);
+        }
+    }
+
     return (
         <div className="min-h-screen bg-slate-950 flex flex-col">
             <h1 className="h-20 text-white bg-blue-800 flex justify-around items-center text-xl font-semibold  w-full">
@@ -409,7 +450,10 @@ export default function Profil({ navigation, user, setUser }) {
                         </div>
                     </div>
 
-                    <button className="text-red-600 cursor-pointer">
+                    <button
+                        onClick={handleDeleteAccount}
+                        className="text-red-600 cursor-pointer"
+                    >
                         Suprimer le compte
                     </button>
                 </div>

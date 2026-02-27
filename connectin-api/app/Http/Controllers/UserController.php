@@ -151,10 +151,15 @@ class UserController extends Controller
             return response()->json(['message' => 'Compte et contenus associés supprimés'], 200);
         } else {
             // CAS 2 : On met en anonyme les posts et les commentaires
-            $user->posts()->update(['content' => "Utilisateur suprimé"]);
-
-
-            $this->users->delete($id);
+            
+            $user->update([
+            'first_name' => 'Utilisateur',
+            'last_name'  => 'supprimé',
+            'profile_photo_path' => null, // On vide le lien vers la photo
+            'email'      => 'anon_' . uniqid() . '@connectin.com', // Libère l'email
+            'password'   => bcrypt(uniqid()), 
+            // Sécurise le compte
+        ]);
 
             return response()->json(['message' => 'Compte anonymisé, contenus conservés'], 200);
         }
