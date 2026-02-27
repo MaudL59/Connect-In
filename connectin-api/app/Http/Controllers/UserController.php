@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth; // On ajoute ça pour aider l'IDE
 use App\Interfaces\UserRepositoryInterface;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -19,9 +20,9 @@ class UserController extends Controller
         $validated = $request->validate([
             'first_name' => 'required|string',
             'last_name'  => 'required|string',
-            'email'      => 'required|email|unique:users,email', 
+            'email'      => 'required|email|unique:users,email',
             // Vérifie que l'email n'existe pas déjà
-            'password'   => 'required|string|confirmed',   
+            'password'   => 'required|string|confirmed',
             // Nécessite un champ password_confirmation
         ]);
 
@@ -30,7 +31,7 @@ class UserController extends Controller
             'first_name' => $validated['first_name'],
             'last_name'  => $validated['last_name'],
             'email'      => $validated['email'],
-            'password'   => bcrypt($validated['password']), 
+            'password'   => bcrypt($validated['password']),
             // Toujours crypter le mot de passe !
         ]);
 
@@ -38,8 +39,8 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Bienvenue parmi nous ! Ton compte a été créé.',
             'user'    => [
-            'id'    => $user->id,
-            'email' => $user->email
+                'id'    => $user->id,
+                'email' => $user->email
             ]
         ], 201); // 201 = Créé avec succès
     }
@@ -77,7 +78,7 @@ class UserController extends Controller
 
         if (!Hash::check($request->input('password'), $user->password)) {
             return response()->json([
-            'message' => 'Mot de passe actuel incorrect'
+                'message' => 'Mot de passe actuel incorrect'
             ], 401);
         }
         // validation de l'image
@@ -103,10 +104,10 @@ class UserController extends Controller
             $path = $request->file('profile_photo')->store('avatars', 'public');
             $data['profile_photo_path'] = $path;
         }
-        
+
         // mise a jour du nouveau mot de passe apres l'avoir modifier
         if ($request->filled('new_password')) {
-        $data['password'] = $request->input('new_password');
+            $data['password'] = $request->input('new_password');
         }
         // mise a jour du profil
         $this->users->update($id, $data);
@@ -158,4 +159,16 @@ class UserController extends Controller
             return response()->json(['message' => 'Compte anonymisé, contenus conservés'], 200);
         }
     }
+    // founction qui permet de rechercher un utilisateur 
+   public function search(Request $request)
+{
+    $query = $request->input('q');
+    $users = User::where('first_name', 'LIKE', "%{$query}%")
+                ->orWhere('last_name', 'LIKE', "%{$query}%")
+                ->orWhere('email', 'LIKE', "%{$query}%")
+                ->limit(5)
+                ->get(); // Récupère les objets pour utiliser les accesseurs
+
+    return response()->json($users);
+}
 }

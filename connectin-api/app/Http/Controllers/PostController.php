@@ -112,8 +112,7 @@ class PostController extends Controller
             // stocke dans storage/app/public/posts
             $path = $request->file('image')->store('posts', 'public');
 
-            // crée URL accessible depuis React
-            $imagePath = asset('storage/' . $path);
+           $imagePath = $path; // On stocke juste "posts/nom_image.png"
         }
 
         //  Création  du post 
@@ -122,22 +121,24 @@ class PostController extends Controller
             'content' => $validated['content'],
             'image_path' => $imagePath
         ]);
+        // Charger la relation user après création
+        $post->load('user');
 
         //  Réponse au format JSON
         return response()->json([
-        'message' => 'Post ajouté avec succès !',
-        'post' => [
-            'id' => $post->id,
-            'content' => $post->content,
-            'image_path' => $post->image_path, // url de l'image contenu dans le post 
-            'user' => [
-                'id' => $post->user->id,
-                'name' => $post->user->full_name,
-                'avatar' => $post->user->profile_photo_url
-            ],
-            'created_at' => Carbon::parse($post->created_at)->diffForHumans()
-        ]
-    ], 201);// 201 = Création réussie
+            'message' => 'Post ajouté avec succès !',
+            'post' => [
+                'id' => $post->id,
+                'content' => $post->content,
+                'image_path' => $post->image_path, // url de l'image contenu dans le post 
+                'user' => [
+                    'id' => $post->user->id,
+                    'name' => $post->user->full_name,
+                    'avatar' => $post->user->profile_photo_url
+                ],
+                'created_at' => Carbon::parse($post->created_at)->diffForHumans()
+            ]
+        ], 201); // 201 = Création réussie
     }
     // Fonction pour récupérer UN post spécifique par son ID
     public function show($id)
