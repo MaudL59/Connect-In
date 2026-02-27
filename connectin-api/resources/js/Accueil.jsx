@@ -265,7 +265,7 @@ export default function Accueil({ navigation, user, setUser }) {
             </header>
 
             <main className="max-w-2xl mx-auto space-y-6">
-                {/* Barre de recherche ✅ CORRIGÉE */}
+                {/* Barre de recherche */}
                 <div className="flex gap-4 items-center">
                     <label className="text-white font-semibold">Recherche</label>
                     <div className="relative flex-1">
