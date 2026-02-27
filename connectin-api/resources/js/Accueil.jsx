@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function Accueil({ navigation, user, setUser }) {
+export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
     const [showForm, setShowForm] = useState(false); // verifie l'etat du formulaire à la base est faux et passe à true si user souhaite créer un post
     const [content, setContent] = useState(""); // lorsque user créer un post , permet d'écrire en temps réel
     const [posts, setPosts] = useState([]); // permet d'afficher tous les posts au démarrage
@@ -284,9 +284,14 @@ export default function Accueil({ navigation, user, setUser }) {
                                             src={u.profile_photo_url || "https://via.placeholder.com/40"}
                                             className="w-10 h-10 rounded-full"
                                             alt="avatar"
-                                        />
-                                        <span onClick={() => navigation("ProfilPublic")}
-                                        >{u.full_name}</span>
+                                        /><span
+                                            onClick={() => {
+                                                setVisitedUser(u);            
+                                                navigation("ProfilPublic");   
+                                            }}
+                                        >
+                                            {u.full_name}
+                                        </span>
                                     </div>
                                 ))}
                             </div>

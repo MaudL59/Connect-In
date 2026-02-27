@@ -10,19 +10,19 @@ import ProfilPublic from "./Profilpublic";
 
 
 export default function App() {
-    //  On vérifie si un token existe déjà dans le navigateur
     const tokenExiste = localStorage.getItem("access_token");
-
-    //  Si le token existe, on commence sur "accueil", sinon sur "login"
     const [page, setPage] = useState(tokenExiste ? "accueil" : "login");
 
+    // TOI (l'utilisateur connecté)
     const [user, setUser] = useState({
         last_name: "",
         first_name: "",
         email: "",
     });
 
-    //   On peut aussi charger les infos de l'utilisateur stockées
+    // L'AUTRE (l'utilisateur que tu cliques dans la recherche)
+    const [visitedUser, setVisitedUser] = useState(null);
+
     useEffect(() => {
         const savedUser = localStorage.getItem("user_data");
         if (savedUser) {
@@ -33,10 +33,11 @@ export default function App() {
     const pages = {
         login: <Login navigation={setPage} setUser={setUser} />,
         inscription: <Inscription navigation={setPage} setUser={setUser} />,
-        accueil: <Accueil navigation={setPage} user={user} />,
+        // On passe setVisitedUser à l'Accueil pour qu'il puisse nous dire sur qui on clique
+        accueil: <Accueil navigation={setPage} user={user} setVisitedUser={setVisitedUser} />,
         profil: <Profil navigation={setPage} user={user} setUser={setUser} />,
-        ProfilPublic: <ProfilPublic navigation={setPage} user={user} setUser={setUser} />,
-
+        // ICI : On passe visitedUser (l'autre) et non user (toi) !
+        ProfilPublic: <ProfilPublic navigation={setPage} user={visitedUser} />,
     };
 
     return <div className="App">{pages[page]}</div>;
