@@ -64,10 +64,10 @@ export default function ProfilPublic({ user, navigation }) {
                             <h3 className="font-bold mb-4 text-slate-300 uppercase text-xs">À propos</h3>
                             <ul className="space-y-3 text-sm">
                                 <li className="flex items-center gap-2">
-                                    📧 <span className="text-slate-400">{user.email}</span>
+                                     <span className="text-slate-400">{user.email}</span>
                                 </li>
                                 <li className="flex items-center gap-2">
-                                    📅 <span className="text-slate-400">Membre depuis 2026</span>
+                                    {/* 📅 <span className="text-slate-400">Membre depuis 2026</span> */}
                                 </li>
                             </ul>
                         </div>
