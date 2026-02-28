@@ -23,22 +23,22 @@ class CommentController extends Controller
     public function update(Request $request, $id) {
         $comment = $this->comments->find($id);
 
-        // 1. Vérification d'existence
+        //  Vérification d'existence
         if (!$comment) {
             return response()->json(['message' => 'Commentaire introuvable'], 404);
         }
 
-        // 2. Vérification d'autorisation (Seul l'auteur peut modifier)
+        //  Vérification d'autorisation (Seul l'auteur peut modifier)
         if ($comment->user_id !== Auth::id()) {
             return response()->json(['message' => 'Modification interdite'], 403);
         }
 
-        // 3. Validation du nouveau contenu
+        //  Validation du nouveau contenu
         $validated = $request->validate([
             'content' => 'required|string|max:500'
         ]);
 
-        // 4. Mise à jour
+        //  Mise à jour
         $this->comments->update($id, [
             'content' => $validated['content']
         ]);
@@ -68,7 +68,7 @@ class CommentController extends Controller
     public function delete($id) {
         $comment = $this->comments->find($id);
 
-        // 1. Vérifie si le commentaire existe (pour éviter un crash)
+        //  Vérifie si le commentaire existe (pour éviter un crash)
         if (!$comment) {
             return response()->json(['message' => 'Commentaire introuvable'], 404);
             // erreur 404Si on cherche un commentaire qui n'existe plus.

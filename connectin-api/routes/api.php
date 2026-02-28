@@ -37,10 +37,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthentificationController::class, 'logout']);
 
     // pour les utilisateurs
-   Route::get('/users/search', [UserController::class, 'search']); //  RECHERCHE
+    Route::get('/users/search', [UserController::class, 'search']); //  RECHERCHE
     Route::post('/users', [UserController::class, 'add']);
     Route::get('/users/{id}', [UserController::class, 'show']);
-    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::post('/users/{id}', [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'delete']);
 
 

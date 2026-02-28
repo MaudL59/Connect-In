@@ -81,20 +81,20 @@ class PostController extends Controller
 
     public function update(Request $request, $id)
     {
-        // 1. Trouver le post ou renvoyer une erreur 404
+        //  Trouver le post ou renvoyer une erreur 404
         $post = Post::findOrFail($id);
 
-        // 2. Valider les données reçues
+        //  Valider les données reçues
         $validated = $request->validate([
             'content' => 'sometimes|string',
             'image_path' => 'sometimes|nullable|string',
             'post_id' => 'sometimes|nullable|exists:posts,id'
         ]);
 
-        // 3. Mettre à jour
+        //  Mettre à jour
         $post->update($validated);
 
-        // 4. Retourner le post mis à jour
+        //  Retourner le post mis à jour
         return response()->json([
             'message' => 'Post mis à jour avec succès !',
             'data' => $post
@@ -153,15 +153,15 @@ class PostController extends Controller
     // Fonction pour récupérer UN post spécifique par son ID
     public function show($id)
     {
-        // 1. On récupère le post via le repository
+        //  On récupère le post via le repository
         $post = $this->posts->find($id);
 
-        // 2. Vérification si le post existe
+        //  Vérification si le post existe
         if (!$post) {
             return response()->json(['message' => 'Post introuvable'], 404);
         }
 
-        // 3. On formate les données (comme dans ton index)
+        //  On formate les données (comme dans ton index)
         $formattedPost = [
             'id' => $post->id,
             'content' => $post->content,
@@ -215,7 +215,7 @@ class PostController extends Controller
 
         $post = $this->posts->find($id);
 
-        // 1. Vérifie si le post existe (pour éviter un crash)
+        //  Vérifie si le post existe (pour éviter un crash)
         if (!$post) {
             return response()->json(['message' => 'Post introuvable'], 404);
             // erreur 404 Si on cherche un post qui n'existe plus.
