@@ -40,17 +40,17 @@ export default function Inscription({ navigation, setUser }) {
 
                 // --- CORRECTIONS POUR LA PERSISTANCE ---
 
-                // 1. On met à jour l'utilisateur dans l'état React
+                //  On met à jour l'utilisateur dans l'état React
                 setUser(data.user);
 
-                // 2. On utilise "access_token" (et non "token") pour que App.js le reconnaisse
+                //  On utilise "access_token" (et non "token") pour que App.js le reconnaisse
                 localStorage.setItem("access_token", data.access_token);
 
-                // 3. On enregistre les infos de l'utilisateur en texte (JSON)
+                //  On enregistre les infos de l'utilisateur en texte (JSON)
                 // C'est ce qui évite qu'Aminata ne revienne à l'actualisation !
                 localStorage.setItem("user_data", JSON.stringify(data.user));
 
-                // 4. On redirige vers l'accueil
+                //  On redirige vers l'accueil
                 navigation("accueil");
             } else {
                 setError(data.message || "L'inscription a échoué.");

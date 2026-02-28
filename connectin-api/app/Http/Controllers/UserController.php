@@ -72,15 +72,21 @@ class UserController extends Controller
 
 
         //  si un utilisaseur tente de modifier le profil d'un autre
+        
         if (Auth::id() !== (int)$id) {
             return response()->json(['message' => 'C\'est le profil d\'un autre utilisateur'], 403);
         }
 
-        if (!Hash::check($request->input('password'), $user->password)) {
-            return response()->json([
-                'message' => 'Mot de passe actuel incorrect'
-            ], 401);
-        }
+        //  si on change le mot de passe ou l'email
+        if( $request->hasAny(['new_password', 'email'])){
+            
+            // Vérifie le mot de passe UNIQUEMENT SI l'utilisateur veut changer des données sensibles"
+            if (!Hash::check($request->input('password'), $user->password)) {
+                return response()->json([
+                    'message' => 'Mot de passe actuel incorrect'
+                ], 401);
+        }}
+        
         // validation de l'image
         $request->validate([
             'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
@@ -107,7 +113,7 @@ class UserController extends Controller
 
         // mise a jour du nouveau mot de passe apres l'avoir modifier
         if ($request->filled('new_password')) {
-            $data['password'] = $request->input('new_password');
+            $data['password'] = bcrypt($request->input('new_password'));
         }
         // mise a jour du profil
         $this->users->update($id, $data);
@@ -140,7 +146,7 @@ class UserController extends Controller
         // supression de tous les likes
         $user->likes()->delete();
 
-        // 2. Récupérer le choix de l'utilisateur pour les commentaire et post
+        //  Récupérer le choix de l'utilisateur pour les commentaire et post
         $doitToutSupprimer = $request->input('delete_content'); // oui ou non
 
         if ($doitToutSupprimer) {

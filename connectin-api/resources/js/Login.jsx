@@ -25,14 +25,14 @@ export default function Login({ navigation, setUser }) {
             const data = await response.json();
 
             if (response.ok) {
-                // 1. On stocke le token pour rester connecté
+                //  On stocke le token pour rester connecté
                 localStorage.setItem("access_token", data.access_token);
 
-                // 2. CORRECTION CRITIQUE : On stocke les infos de l'utilisateur
+                //  CORRECTION CRITIQUE : On stocke les infos de l'utilisateur
                 // Sans cette ligne, App.js reprend les vieilles infos (Aminata) au rafraîchissement
                 localStorage.setItem("user_data", JSON.stringify(data.user));
 
-                // 3. On met à jour l'état actuel de l'application
+                //  On met à jour l'état actuel de l'application
                 setUser(data.user);
 
                 alert("Connexion réussie !");
