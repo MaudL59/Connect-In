@@ -410,7 +410,7 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
                             )}
 
                             {/* Contenu */}
-                            <p className="text-slate-300 mb-4 cursor-pointer leading-relaxed">
+                            <p className="text-slate-300 mb-4 leading-relaxed">
                                 {post.content}
                             </p>
                             {post.image_path && (
