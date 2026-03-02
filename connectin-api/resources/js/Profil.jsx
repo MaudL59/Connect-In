@@ -34,8 +34,9 @@ export default function Profil({ navigation, user, setUser }) {
     const [preview, setPreview] = useState(null);
 
     // pour la bio
-    const [tempBio, setTempBio] = useState(user.bio);
+    const [tempBio, setTempBio] = useState(user.bio || "");
     const [isEditingBio, setIsEditingBio] = useState(false);
+    
 
     //  fonction pour sauvegarder la bio
     async function handleSaveBio() {
@@ -329,23 +330,26 @@ export default function Profil({ navigation, user, setUser }) {
             const data = await response.json();
 
             if (response.ok) {
-                // si reussi un message d'alerte apparait et l'image est bien enregistre dans la db
-                alert("Image modifié");
-
-                // On met à jour l'utilisateur en gardant ses anciennes infos (...user) et en changeant juste la photo
-                setUser({
-                    ...user,
-                    profile_photo_path: data.user.profile_photo_path,
-                });
-
-                const updatedUser = {
-                    ...user,
-                    profile_photo_path: data.user.profile_photo_path,
+                // on crée l'objet l'utilisateur mis à jour 
+                const UptadedUser = {
+                    ... user,
+                    profile_photo_path:data.user.profile_photo_path,
                 };
-                setUser(updatedUser);
-                localStorage.setItem("user", JSON.stringify(updatedUser));
+                // on met à jour le state dans React
+                setUser(UptadedUser);
+                // on met à jour le localstorage
+                localStorage.setItem("user_data", JSON.stringify(UptadedUser));
+
+                // on vide le preview pour  forcer l'affichage de la vraie image
+                setPreview(null);
+                alert("photo mise à jour avec succes!"); 
+
+
+            
+
+                
             }
-        } catch {
+        } catch (error) {
             // si non il y a un message d'erreur
             alert("Une erreur est survenue");
         }
@@ -393,17 +397,12 @@ export default function Profil({ navigation, user, setUser }) {
                         className="h-32 w-32 cursor-pointer bg-slate-700 border-4 border-slate-950 rounded-full flex items-center justify-center overflow-hidden h text-4xl hover:bg-slate-600 font-bold shadow-2xl"
                     >
                         {preview ? (
-                            <img
-                                src={preview}
-                                className="h-full w-full object-cover"
-                            />
+                           <img src={preview} className="h-full w-full object-cover" alt="Aperçu" />
                         ) : user.profile_photo_path ? (
                             <img
-                                src={
-                                    "http://127.0.0.1:8000/storage/" +
-                                    user.profile_photo_path
-                                }
-                                className="h-full w-full object-cover"
+                                src={`http://127.0.0.1:8000/storage/${user.profile_photo_path}`}
+                                className="h-full w-full object-cover" alt="profil"
+                                onError={(e) => { e.target.src = "https://via.placeholder.com/150" }}
                             />
                         ) : (
                             <span>
