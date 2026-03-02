@@ -6,14 +6,14 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
     const [posts, setPosts] = useState([]); // permet d'afficher tous les posts au démarrage
     const [image, setImage] = useState(null); // permet de gerer l'ajout d'image
     const [commentTexts, setCommentTexts] = useState({}); // Pour stocker le texte de chaque post individuellement
-    const [openCommentsPostId, setOpenCommentsPostId] = useState(null);// permet de capsuler tous les commentaires d'un post un clic permet de tous les afficher
+    const [openCommentsPostId, setOpenCommentsPostId] = useState(null); // permet de capsuler tous les commentaires d'un post un clic permet de tous les afficher
     const [searchTerm, setSearchTerm] = useState(""); // permet de gerer la recherche d'un utilisateur
     const [searchResults, setSearchResults] = useState([]); //
     const API_URL = "http://127.0.0.1:8000/api";
 
     // Récupere les posts depuis L'API LARAVEL
     const fetchPosts = async () => {
-        const token = localStorage.getItem("access_token"); // 
+        const token = localStorage.getItem("access_token"); //
         console.log("Jeton envoyé :", token);
 
         try {
@@ -71,7 +71,10 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
                 setShowForm(false);
                 fetchPosts(); // Recharge la liste pour voir le nouveau post
             } else {
-                alert("Erreur du serveur : " + (result.message || "Impossible de publier"));
+                alert(
+                    "Erreur du serveur : " +
+                        (result.message || "Impossible de publier"),
+                );
             }
         } catch (error) {
             console.error("Erreur publication :", error);
@@ -86,7 +89,9 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
         }
         try {
             const response = await fetch(`${API_URL}/users/search?q=${val}`, {
-                headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` }
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+                },
             });
             const data = await response.json();
             setSearchResults(data);
@@ -100,7 +105,8 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
         if (!text) return;
 
         try {
-            const response = await fetch(`${API_URL}/comments`, { //
+            const response = await fetch(`${API_URL}/comments`, {
+                //
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -121,7 +127,6 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
             console.error("Erreur commentaire :", error);
         }
     };
-
 
     // fonction qui permet de liker un post
     const handleToggleLike = async (postId) => {
@@ -148,7 +153,9 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
         try {
             const response = await fetch(`${API_URL}/comments/${commentId}`, {
                 method: "DELETE",
-                headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` }
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+                },
             });
             if (response.ok) fetchPosts();
         } catch (error) {
@@ -163,9 +170,9 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
                 method: "PUT", // Important : méthode PUT pour la mise à jour
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("access_token")}`
+                    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                 },
-                body: JSON.stringify({ content: newContent })
+                body: JSON.stringify({ content: newContent }),
             });
             if (response.ok) fetchPosts();
         } catch (error) {
@@ -248,27 +255,40 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
         navigation("login");
     };
 
-
     return (
         <div className="min-h-screen bg-slate-950 text-white p-4">
             {/* Header */}
             <header className="h-20 bg-blue-800 flex items-center justify-around text-xl font-bold mb-8 rounded-lg">
-                <span onClick={() => navigation("profil")} className="cursor-pointer hover:underline">
+                <span
+                    onClick={() => navigation("profil")}
+                    className="cursor-pointer hover:underline"
+                >
                     Bienvenue, {user.first_name} {user.last_name} !
                 </span>
-                <span onClick={() => navigation("accueil")} className="cursor-pointer hover:underline">CONNECT'IN</span>
-                <button onClick={() => {
-                    localStorage.removeItem("access_token");
-                    setUser?.({ first_name: "", last_name: "", email: "" });
-                    navigation("login");
-                }} className="hover:underline">Déconnexion</button>
+                <span
+                    onClick={() => navigation("accueil")}
+                    className="cursor-pointer hover:underline"
+                >
+                    CONNECT'IN
+                </span>
+                <button
+                    onClick={() => {
+                        localStorage.removeItem("access_token");
+                        setUser?.({ first_name: "", last_name: "", email: "" });
+                        navigation("login");
+                    }}
+                    className="cursor-pointer hover:underline"
+                >
+                    Déconnexion
+                </button>
             </header>
-            
 
             <main className="max-w-2xl mx-auto space-y-6">
                 {/* Barre de recherche */}
                 <div className="flex gap-4 items-center">
-                    <label className="text-white font-semibold">Recherche</label>
+                    <label className="text-white font-semibold">
+                        Recherche
+                    </label>
                     <div className="relative flex-1">
                         <input
                             className="w-full rounded-full px-4 py-2 bg-white text-black"
@@ -279,15 +299,22 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
                         {searchResults.length > 0 && (
                             <div className="absolute top-full w-full bg-slate-900 border border-slate-700 rounded-lg shadow-xl mt-1 z-[9999]">
                                 {searchResults.map((u) => (
-                                    <div key={u.id} className="p-3 hover:bg-slate-800 cursor-pointer flex items-center gap-3">
+                                    <div
+                                        key={u.id}
+                                        className="p-3 hover:bg-slate-800 cursor-pointer flex items-center gap-3"
+                                    >
                                         <img
-                                            src={u.profile_photo_url || "https://via.placeholder.com/40"}
+                                            src={
+                                                u.profile_photo_url ||
+                                                "https://via.placeholder.com/40"
+                                            }
                                             className="w-10 h-10 rounded-full"
                                             alt="avatar"
-                                        /><span
+                                        />
+                                        <span
                                             onClick={() => {
-                                                setVisitedUser(u);            
-                                                navigation("ProfilPublic");   
+                                                setVisitedUser(u);
+                                                navigation("ProfilPublic");
                                             }}
                                         >
                                             {u.full_name}
@@ -299,12 +326,11 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
                     </div>
                     <button
                         onClick={() => setShowForm(!showForm)}
-                        className="bg-white text-black px-6 py-2 rounded-lg font-bold hover:bg-gray-200"
+                        className="bg-white text-black px-6 py-2 cursor-pointer rounded-lg font-bold hover:bg-gray-200"
                     >
                         {showForm ? "ANNULER" : "CRÉER POST"}
                     </button>
                 </div>
-                
 
                 {/* Formulaire création post */}
                 {showForm && (
@@ -323,7 +349,7 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
                         />
                         <button
                             onClick={handleCreatePost}
-                            className="w-full bg-blue-600 py-3 rounded-lg font-semibold text-white hover:bg-blue-700"
+                            className="w-full bg-blue-600 py-3 cursor-pointer rounded-lg font-semibold text-white hover:bg-blue-700"
                         >
                             Publier
                         </button>
@@ -333,30 +359,49 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
                 {/* Feed des posts */}
                 <div className="space-y-6">
                     {posts.map((post) => (
-                        <div key={post.id} className="bg-slate-900 border border-slate-800 p-6 rounded-xl hover:shadow-xl transition-all">
+                        <div
+                            key={post.id}
+                            className="bg-slate-900 border border-slate-800 p-6 rounded-xl hover:shadow-xl transition-all"
+                        >
                             {/* Header post */}
                             <div className="flex items-center gap-3 mb-3">
                                 {post.user?.avatar && (
-                                    <img src={post.user.avatar} alt="Avatar" className="w-12 h-12 rounded-full border-2 border-blue-500" />
+                                    <img
+                                        src={post.user.avatar}
+                                        alt="Avatar"
+                                        className="w-12 h-12 rounded-full border-2 border-blue-500"
+                                    />
                                 )}
                                 <div>
-                                    <h3 className="font-bold text-blue-400">{post.user?.name || "Utilisateur supprimé"}</h3>
-                                    <div className="text-xs text-slate-400">{post.created_at}</div>
+                                    <h3 className="font-bold text-blue-400">
+                                        {post.user?.name ||
+                                            "Utilisateur supprimé"}
+                                    </h3>
+                                    <div className="text-xs text-slate-400">
+                                        {post.created_at}
+                                    </div>
                                 </div>
                             </div>
                             {/*  BOUTONS MODIFIER / SUPPRIMER (seulement si c'est mon post) */}
                             {post.user?.id === user.id && (
                                 <div className="flex gap-2">
                                     <button
-                                        onClick={() => handleUpdatePost(post.id, post.content)}
-                                        className="text-green-400 px-3 py-1 rounded-lg border border-green-400 hover:bg-green-400 hover:text-black transition-all text-sm font-semibold"
+                                        onClick={() =>
+                                            handleUpdatePost(
+                                                post.id,
+                                                post.content,
+                                            )
+                                        }
+                                        className="text-green-400 px-3 py-1 cursor-pointer rounded-lg border border-green-400 hover:bg-green-400 hover:text-black transition-all text-sm font-semibold"
                                         title="Modifier le post"
                                     >
                                         Modifier
                                     </button>
                                     <button
-                                        onClick={() => handleDeletePost(post.id)}
-                                        className="text-red-400 px-3 py-1 rounded-lg border border-red-400 hover:bg-red-400 hover:text-white transition-all text-sm font-semibold"
+                                        onClick={() =>
+                                            handleDeletePost(post.id)
+                                        }
+                                        className="text-red-400 px-3 py-1 cursor-pointer rounded-lg border border-red-400 hover:bg-red-400 hover:text-white transition-all text-sm font-semibold"
                                         title="Supprimer le post"
                                     >
                                         Supprimer
@@ -365,22 +410,34 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
                             )}
 
                             {/* Contenu */}
-                            <p className="text-slate-300 mb-4 leading-relaxed">{post.content}</p>
+                            <p className="text-slate-300 mb-4 cursor-pointer leading-relaxed">
+                                {post.content}
+                            </p>
                             {post.image_path && (
-                                <img src={post.image_path} alt="Post" className="w-full max-h-64 object-cover rounded-lg mb-4" />
+                                <img
+                                    src={post.image_path}
+                                    alt="Post"
+                                    className="w-full max-h-64 object-cover  rounded-lg mb-4"
+                                />
                             )}
 
                             {/* Actions */}
                             <div className="flex gap-6 pt-4 border-t border-slate-700 text-sm text-slate-400">
                                 <button
                                     onClick={() => handleToggleLike(post.id)}
-                                    className="hover:text-white flex items-center gap-1"
+                                    className="hover:text-white cursor-pointer flex items-center gap-1"
                                 >
                                     👍 {post.likes_count ?? 0} Likes
                                 </button>
                                 <button
-                                    onClick={() => setOpenCommentsPostId(openCommentsPostId === post.id ? null : post.id)}
-                                    className="hover:text-white flex items-center gap-1"
+                                    onClick={() =>
+                                        setOpenCommentsPostId(
+                                            openCommentsPostId === post.id
+                                                ? null
+                                                : post.id,
+                                        )
+                                    }
+                                    className="hover:text-white cursor-pointer flex items-center gap-1"
                                 >
                                     💬 {post.comments_count ?? 0} Commentaires
                                 </button>
@@ -391,35 +448,55 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
                                 <div className="mt-4 space-y-2">
                                     {/* Liste commentaires */}
                                     {post.comments?.map((comment) => (
-                                        <div key={comment.id} className="bg-slate-800 p-3 rounded-lg group hover:bg-slate-700 transition-colors">
+                                        <div
+                                            key={comment.id}
+                                            className="bg-slate-800 p-3 rounded-lg group hover:bg-slate-700 transition-colors"
+                                        >
                                             <div className="flex justify-between items-start gap-2">
                                                 <div className="flex items-center gap-2">
                                                     <span className="font-semibold text-blue-400">
-                                                        {comment.user?.name || "Utilisateur supprimé"}
+                                                        {comment.user?.name ||
+                                                            "Utilisateur supprimé"}
                                                     </span>
-                                                    <span className="text-xs text-slate-500">{comment.created_at}</span>
+                                                    <span className="text-xs text-slate-500">
+                                                        {comment.created_at}
+                                                    </span>
                                                 </div>
                                                 <span className="flex-1 text-left ml-2 text-slate-200">
                                                     {comment.content}
                                                 </span>
                                                 {/* Actions (seulement si c'est mon commentaire) */}
-                                                {comment.user?.id === user.id && (
+                                                {comment.user?.id ===
+                                                    user.id && (
                                                     <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all">
                                                         <button
                                                             onClick={() => {
-                                                                const nouveauTexte = window.prompt("Modifier :", comment.content);
-                                                                if (nouveauTexte?.trim()) {
-                                                                    handleUpdateComment(comment.id, nouveauTexte);
+                                                                const nouveauTexte =
+                                                                    window.prompt(
+                                                                        "Modifier :",
+                                                                        comment.content,
+                                                                    );
+                                                                if (
+                                                                    nouveauTexte?.trim()
+                                                                ) {
+                                                                    handleUpdateComment(
+                                                                        comment.id,
+                                                                        nouveauTexte,
+                                                                    );
                                                                 }
                                                             }}
-                                                            className="text-green-400 hover:text-green-400 p-1 rounded"
+                                                            className="text-green-400 cursor-pointer hover:text-green-400 p-1 rounded"
                                                             title="Modifier"
                                                         >
                                                             modifier
                                                         </button>
                                                         <button
-                                                            onClick={() => handleDeleteComment(comment.id)}
-                                                            className="text-red-400 hover:text-red-300 p-1 rounded"
+                                                            onClick={() =>
+                                                                handleDeleteComment(
+                                                                    comment.id,
+                                                                )
+                                                            }
+                                                            className="text-red-400 cursor-pointer hover:text-red-300 p-1 rounded"
                                                             title="Supprimer"
                                                         >
                                                             Supprimer
@@ -428,7 +505,11 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
                                                 )}
                                             </div>
                                         </div>
-                                    )) || <p className="text-slate-500 text-sm italic">Aucun commentaire...</p>}
+                                    )) || (
+                                        <p className="text-slate-500 text-sm italic">
+                                            Aucun commentaire...
+                                        </p>
+                                    )}
 
                                     {/* Formulaire nouveau commentaire */}
                                     <div className="flex gap-2 mt-4 pt-4 border-t border-slate-700">
@@ -437,15 +518,21 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
                                             className="flex-1 bg-slate-800 text-white border border-slate-700 rounded-lg px-4 py-2 text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             placeholder="Ajouter un commentaire..."
                                             value={commentTexts[post.id] || ""}
-                                            onChange={(e) => setCommentTexts({
-                                                ...commentTexts,
-                                                [post.id]: e.target.value
-                                            })}
+                                            onChange={(e) =>
+                                                setCommentTexts({
+                                                    ...commentTexts,
+                                                    [post.id]: e.target.value,
+                                                })
+                                            }
                                         />
                                         <button
-                                            onClick={() => handleAddComment(post.id)}
-                                            disabled={!commentTexts[post.id]?.trim()}
-                                            className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 px-6 py-2 rounded-lg text-sm font-semibold whitespace-nowrap disabled:cursor-not-allowed transition-colors"
+                                            onClick={() =>
+                                                handleAddComment(post.id)
+                                            }
+                                            disabled={
+                                                !commentTexts[post.id]?.trim()
+                                            }
+                                            className="bg-blue-600 hover:bg-blue-700 cursor-pointer disabled:bg-gray-600 px-6 py-2 rounded-lg text-sm font-semibold whitespace-nowrap disabled:cursor-not-allowed transition-colors"
                                         >
                                             Envoyer
                                         </button>
@@ -458,7 +545,10 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
 
                 {posts.length === 0 && (
                     <div className="text-center py-12 text-slate-500">
-                        <p>Aucun post pour le moment. Soyez le premier à publier !</p>
+                        <p>
+                            Aucun post pour le moment. Soyez le premier à
+                            publier !
+                        </p>
                     </div>
                 )}
             </main>
