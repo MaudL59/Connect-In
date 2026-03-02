@@ -47,9 +47,9 @@ export default function ProfilPublic({ user, navigation }) {
                     </div>
 
                     <div className="mt-6 sm:mt-20 flex gap-2">
-                        <button className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-semibold transition-all">
+                        {/* <button className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-semibold transition-all">
                             Ajouter
-                        </button>
+                        </button> */}
                         <button
                             onClick={() => navigation("messagerie")} // On change de page vers la messagerie
                             className="bg-slate-800 hover:bg-slate-700 px-6 py-2 rounded-lg font-semibold transition-all border border-slate-700"
@@ -77,11 +77,11 @@ export default function ProfilPublic({ user, navigation }) {
                     </div>
 
                     {/* Colonne Droite : Publications (Exemple) */}
-                    <div className="md:col-span-2 space-y-4">
+                    {/* <div className="md:col-span-2 space-y-4">
                         <div className="bg-slate-900 p-8 rounded-xl border border-slate-800 text-center">
                             <p className="text-slate-500 italic">Aucune publication pour le moment.</p>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
