@@ -40,14 +40,13 @@ export default function Profil({ navigation, user, setUser }) {
                 const response = await fetch(
                     `http://127.0.0.1:8000/api/users/${user.id}`,
                     {
-                        method: "POST",
+                        method: "PUT",
                         headers: {
                             "Content-Type": "application/json",
                             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                         },
                         body: JSON.stringify({
                             last_name: tempLastName,
-                            _method: "PUT",
                         }),
                     },
                 );
@@ -82,14 +81,13 @@ export default function Profil({ navigation, user, setUser }) {
                 const response = await fetch(
                     `http://127.0.0.1:8000/api/users/${user.id}`,
                     {
-                        method: "POST",
+                        method: "PUT",
                         headers: {
                             "Content-Type": "application/json",
                             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                         },
                         body: JSON.stringify({
                             first_name: tempFirstName,
-                            _method: "PUT",
                         }),
                     },
                 );
@@ -124,7 +122,7 @@ export default function Profil({ navigation, user, setUser }) {
                 const response = await fetch(
                     `http://127.0.0.1:8000/api/users/${user.id}`,
                     {
-                        method: "POST",
+                        method: "PUT",
                         headers: {
                             "Content-Type": "application/json",
                             // On récupère le token pour prouver qu'on est connecté
@@ -134,8 +132,6 @@ export default function Profil({ navigation, user, setUser }) {
                             email: tempEmail,
                             // Le nouvel email que l'on veut enregistrer
                             password: verificationPassword,
-                            // Le mot de passe actuel pour vérification
-                            _method: "PUT",
                         }),
                     },
                 );
@@ -177,7 +173,7 @@ export default function Profil({ navigation, user, setUser }) {
                 const response = await fetch(
                     `http://127.0.0.1:8000/api/users/${user.id}`,
                     {
-                        method: "POST",
+                        method: "PUT",
                         headers: {
                             "Content-Type": "application/json",
                             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -299,11 +295,19 @@ export default function Profil({ navigation, user, setUser }) {
                     ...user,
                     profile_photo_path: data.user.profile_photo_path,
                 });
+
+                const updatedUser = {
+                    ...user,
+                    profile_photo_path: data.user.profile_photo_path,
+                };
+                setUser(updatedUser);
+                localStorage.setItem("user", JSON.stringify(updatedUser));
             }
         } catch {
             // si non il y a un message d'erreur
             alert("Une erreur est survenue");
         }
+        console.log(user);
     }
 
     return (
