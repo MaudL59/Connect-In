@@ -92,6 +92,7 @@ class UserController extends Controller
             'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'first_name' => 'string|max:255',
             'last_name' => 'string|max:255',
+            'bio' => 'nullable|string|max:2000',
         ]);
         // ce que l'utilisateur peut modifier
         $data = [];
@@ -99,6 +100,10 @@ class UserController extends Controller
         if ($request->filled('first_name')) $data['first_name'] = $request->input('first_name');
         if ($request->filled('last_name'))  $data['last_name']  = $request->input('last_name');
         if ($request->filled('email'))      $data['email']      = $request->input('email');
+        // j'ai mit has au lieu de filled pour que l'utilisateur puisse faire une bio vide
+        if ($request->has('bio')) {
+        $data['bio'] = $request->input('bio');
+        }
 
         //  Gestion de l'upload
         if ($request->hasFile('profile_photo')) {

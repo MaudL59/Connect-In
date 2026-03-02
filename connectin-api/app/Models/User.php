@@ -26,6 +26,7 @@ class User extends Authenticatable
         'password',
         'is_connected',
         'profile_photo_path',
+        'bio',
     ]; // ce sont les veriables necessitant l'accès à un utilisateur
 
     /**
