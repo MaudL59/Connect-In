@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ProfilPublic({ user, navigation }) {
+export default function ProfilPublic({ user, navigation, setUser }) {
     // Si par erreur on arrive ici sans utilisateur, on affiche un message
     if (!user) {
         return (
@@ -15,19 +15,43 @@ export default function ProfilPublic({ user, navigation }) {
             </div>
         );
     }
-
+    console.log("Données de l'utilisateur :", user);
     return (
-        <div className="min-h-screen bg-slate-950 text-white">
+        <div className="min-h-screen bg-slate-950 text-white p-4">
             {/* Header avec bouton retour */}
-            <div className="h-16 bg-blue-800 flex items-center px-4 shadow-lg sticky top-0 z-10">
-                <button
+            <header className="h-20 bg-blue-800 flex items-center justify-around text-xl font-bold rounded-lg">
+                <div className="h-16 bg-blue-800 justify-center rounded w-80 flex  items-center px-4  sticky top-0 z-10">
+                    <button
+                        onClick={() => navigation("accueil")}
+                        className="mr-4 cursor-pointer hover:bg-blue-700 p-2 rounded-full transition-colors"
+                    >
+                        ← Retour
+                    </button>
+                    <h1 className="font-semibold text-lg">
+                        Profil de {user.first_name}
+                    </h1>
+                </div>
+                <span
                     onClick={() => navigation("accueil")}
-                    className="mr-4 hover:bg-blue-700 p-2 rounded-full transition-colors"
+                    className="cursor-pointer hover:underline"
                 >
-                    ← Retour
+                    CONNECT'IN
+                </span>
+                <button
+                    onClick={() => {
+                        localStorage.removeItem("access_token");
+                        setUser?.({
+                            first_name: "",
+                            last_name: "",
+                            email: "",
+                        });
+                        navigation("login");
+                    }}
+                    className="cursor-pointer hover:underline"
+                >
+                    Déconnexion
                 </button>
-                <h1 className="font-semibold text-lg">Profil de {user.first_name}</h1>
-            </div>
+            </header>
 
             <div className="max-w-4xl mx-auto pb-10">
                 {/* Bannière / Couverture */}
@@ -43,7 +67,10 @@ export default function ProfilPublic({ user, navigation }) {
                         <h2 className="text-3xl font-bold">
                             {user.first_name} {user.last_name}
                         </h2>
-                        <p className="text-slate-400">@{user.first_name?.toLowerCase()}_{user.last_name?.toLowerCase()}</p>
+                        <p className="text-slate-400">
+                            @{user.first_name?.toLowerCase()}_
+                            {user.last_name?.toLowerCase()}
+                        </p>
                     </div>
 
                     <div className="mt-6 sm:mt-20 flex gap-2">
@@ -64,10 +91,14 @@ export default function ProfilPublic({ user, navigation }) {
                     {/* Colonne Gauche : Infos */}
                     <div className="space-y-6">
                         <div className="bg-slate-900 p-4 rounded-xl border border-slate-800">
-                            <h3 className="font-bold mb-4 text-slate-300 uppercase text-xs">À propos</h3>
+                            <h3 className="font-bold mb-4 text-slate-300 uppercase text-xs">
+                                À propos
+                            </h3>
                             <ul className="space-y-3 text-sm">
                                 <li className="flex items-center gap-2">
-                                    <span className="text-slate-400">{user.email}</span>
+                                    <span className="text-slate-400">
+                                        {user.email}
+                                    </span>
                                 </li>
                                 <li className="flex items-center gap-2">
                                     {/* 📅 <span className="text-slate-400">Membre depuis 2026</span> */}
@@ -76,12 +107,18 @@ export default function ProfilPublic({ user, navigation }) {
                         </div>
                     </div>
 
-                    {/* Colonne Droite : Publications (Exemple) */}
-                    {/* <div className="md:col-span-2 space-y-4">
-                        <div className="bg-slate-900 p-8 rounded-xl border border-slate-800 text-center">
-                            <p className="text-slate-500 italic">Aucune publication pour le moment.</p>
-                        </div>
-                    </div> */}
+                    {/* Colonne Droite : Bio de l'utilisateur */}
+                    <div className="bg-slate-900  w-110 p-8 rounded-xl border break-words border-slate-800 ">
+                        {user.bio ? (
+                            <p className="text-slate-300 text-left whitespace-pre-line">
+                                {user.bio}
+                            </p>
+                        ) : (
+                            <p className="text-slate-300 text-left whitespace-pre-line">
+                                Aucune description pour le moment.
+                            </p>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
