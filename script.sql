@@ -48,14 +48,13 @@ CREATE TABLE IF NOT EXISTS likes (
 
 
 CREATE TABLE IF NOT EXISTS messages (
-    id BIGINT AUTO_INCREMENT,
-    sender_id BIGINT NOT NULL,
-    receiver_id BIGINT NOT NULL,
+    id BIGINT UNSIGNED AUTO_INCREMENT,
+    sender_id BIGINT UNSIGNED NOT NULL,
+    receiver_id BIGINT UNSIGNED NOT NULL,
     content TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY(id),
-    -- Ces lignes créent la liaison avec ta table users
     CONSTRAINT fk_sender FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT fk_receiver FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
