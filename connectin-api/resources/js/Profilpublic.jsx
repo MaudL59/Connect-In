@@ -59,8 +59,19 @@ export default function ProfilPublic({ user, navigation, setUser }) {
 
                 {/* Photo de profil et Infos principales */}
                 <div className="px-6 -mt-12 flex flex-col items-center sm:items-start sm:flex-row sm:gap-6">
-                    <div className="h-32 w-32 bg-slate-700 border-4 border-slate-950 rounded-full flex items-center justify-center text-4xl font-bold shadow-2xl">
-                        {user.first_name?.charAt(0).toUpperCase()}
+                    <div className="h-32 w-32 bg-slate-700 border-4 border-slate-950 rounded-full flex items-center justify-center text-4xl font-bold  object-cover shadow-2xl">
+                        {user.profile_photo_path ? (
+                            <img
+                                src={`http://127.0.0.1:8000/storage/${user.profile_photo_path}`}
+                                alt="Profil"
+                                className="h-full w-full rounded-full object-cover"
+                            />
+                        ) : (
+                            <span className="text-slate-300">
+                                {user.first_name?.charAt(0).toUpperCase()}
+                                {user.last_name?.charAt(0).toUpperCase()}
+                            </span>
+                        )}
                     </div>
 
                     <div className="mt-14 sm:mt-16 flex-1 text-center sm:text-left">
