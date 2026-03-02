@@ -33,6 +33,48 @@ export default function Profil({ navigation, user, setUser }) {
     const fileInputRef = useRef(null);
     const [preview, setPreview] = useState(null);
 
+    // pour la bio
+    const [tempBio, setTempBio] = useState(user.bio);
+    const [isEditingBio, setIsEditingBio] = useState(false);
+
+    //  fonction pour sauvegarder la bio
+    async function handleSaveBio() {
+        if (isEditingBio) {
+            try {
+                const response = await fetch(
+                    `http://127.0.0.1:8000/api/users/${user.id}`,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+                        },
+                        body: JSON.stringify({ bio: tempBio }),
+                    },
+                );
+                const data = await response.json();
+
+                if (response.ok) {
+                    // On enregistre les changements pour que seul le nom change
+                    setUser({ ...user, bio: tempBio });
+                    // On ferme l'input
+                    setIsEditingBio(false);
+                    alert("Bio mis à jour !");
+                } else {
+                    // Si le serveur refuse (ex: mauvais MDP)
+                    alert(data.message || "Erreur lors de la modification");
+                }
+            } catch (error) {
+                // Si la connexion a échoué (réseau, serveur éteint)
+                console.error("Erreur critique :", error);
+                alert("Impossible de joindre le serveur.");
+            }
+        } else {
+            // Si ce n'était pas en mode édition, on l'active !
+            setIsEditingBio(true);
+        }
+    }
+
     // fonction pour le bouton enregistrement du nouveau nom
     async function handleSaveLastName() {
         if (isEditingLastName) {
@@ -396,16 +438,32 @@ export default function Profil({ navigation, user, setUser }) {
                 </div>
             </div>
 
-            <div>
-                <textarea
-                    placeholder="Décrivez vos missions ou vos domaines d'expertise"
-                    name="bio"
-                    id="bio"
-                    className="h-content border p-5 w-full rounded"
-                ></textarea>
-            </div>
+            <div className="flex w-full  gap gap-2 justify-center">
+                <div className="flex flex-col">
+                    <span>
+                        Ici décrivez vos missions ou vos domaines d'expertise
+                    </span>
+                    <div className="flex w-full  gap gap-2 justify-center">
+                        <textarea
+                            placeholder="Ex: Je suis en ......, je m'occupe de ......, je me spécialise en ........."
+                            name="bio"
+                            id="bio"
+                            className="h-content border border-slate-700  bg-slate-900 p-5 w-100 mt-5 rounded"
+                            value={tempBio}
+                            onChange={(e) => setTempBio(e.target.value)}
+                            readOnly={!isEditingBio}
+                        ></textarea>
 
-            <div className="flex justify-center">
+                        <button
+                            onClick={handleSaveBio}
+                            className="text-white cursor-pointer hover:text-red-600"
+                        >
+                            {isEditingBio ? "Enregistrer" : "Modifier"}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-row items-center justify-center">
                 <div className="bg-slate-900 items-center justify-center mt-10  p-8 rounded-xl shadow-xl border border-slate-700 w-full max-w-md">
                     <div>
                         {/* champ Nom/ LastName */}
