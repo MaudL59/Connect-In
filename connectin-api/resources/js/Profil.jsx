@@ -245,7 +245,7 @@ export default function Profil({ navigation, user, setUser }) {
                 // On ferme le formulaire par sécurité avant de partir
                 setConfirmationSuppression(false);
 
-                navigation("/login");
+                navigation("login");
             } else {
                 // Si le serveur renvoie une erreur (ex: 401 mot de passe incorrect)
                 const data = await response.json();
@@ -618,7 +618,7 @@ export default function Profil({ navigation, user, setUser }) {
                                     setMotDePasseSecurite(e.target.value)
                                 }
                                 placeholder="••••••••"
-                                className="placeholder-gray-500 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white outline-none"
+                                className="placeholder-gray-500 w-full text-black px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white outline-none"
                             />
                         </div>
 
