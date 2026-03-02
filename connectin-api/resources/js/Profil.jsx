@@ -36,7 +36,6 @@ export default function Profil({ navigation, user, setUser }) {
     // pour la bio
     const [tempBio, setTempBio] = useState(user.bio || "");
     const [isEditingBio, setIsEditingBio] = useState(false);
-    
 
     //  fonction pour sauvegarder la bio
     async function handleSaveBio() {
@@ -56,22 +55,26 @@ export default function Profil({ navigation, user, setUser }) {
                 const data = await response.json();
 
                 if (response.ok) {
-                    // On enregistre les changements pour que seul le nom change
-                    setUser({ ...user, bio: tempBio });
-                    // On ferme l'input
+                    // si bon on enregistre les changement
+                    const updatedUser = { ...user, bio: tempBio };
+                    setUser(updatedUser);
+
+                    localStorage.setItem(
+                        "user_data",
+                        JSON.stringify(updatedUser),
+                    );
+
                     setIsEditingBio(false);
-                    alert("Bio mis à jour !");
+                    alert("Bio mise à jour !");
                 } else {
-                    // Si le serveur refuse (ex: mauvais MDP)
+                    // si non message d'erreur
                     alert(data.message || "Erreur lors de la modification");
                 }
             } catch (error) {
-                // Si la connexion a échoué (réseau, serveur éteint)
                 console.error("Erreur critique :", error);
                 alert("Impossible de joindre le serveur.");
             }
         } else {
-            // Si ce n'était pas en mode édition, on l'active !
             setIsEditingBio(true);
         }
     }
@@ -330,10 +333,10 @@ export default function Profil({ navigation, user, setUser }) {
             const data = await response.json();
 
             if (response.ok) {
-                // on crée l'objet l'utilisateur mis à jour 
+                // on crée l'objet l'utilisateur mis à jour
                 const UptadedUser = {
-                    ... user,
-                    profile_photo_path:data.user.profile_photo_path,
+                    ...user,
+                    profile_photo_path: data.user.profile_photo_path,
                 };
                 // on met à jour le state dans React
                 setUser(UptadedUser);
@@ -342,12 +345,7 @@ export default function Profil({ navigation, user, setUser }) {
 
                 // on vide le preview pour  forcer l'affichage de la vraie image
                 setPreview(null);
-                alert("photo mise à jour avec succes!"); 
-
-
-            
-
-                
+                alert("photo mise à jour avec succes!");
             }
         } catch (error) {
             // si non il y a un message d'erreur
@@ -397,12 +395,20 @@ export default function Profil({ navigation, user, setUser }) {
                         className="h-32 w-32 cursor-pointer bg-slate-700 border-4 border-slate-950 rounded-full flex items-center justify-center overflow-hidden h text-4xl hover:bg-slate-600 font-bold shadow-2xl"
                     >
                         {preview ? (
-                           <img src={preview} className="h-full w-full object-cover" alt="Aperçu" />
+                            <img
+                                src={preview}
+                                className="h-full w-full object-cover"
+                                alt="Aperçu"
+                            />
                         ) : user.profile_photo_path ? (
                             <img
                                 src={`http://127.0.0.1:8000/storage/${user.profile_photo_path}`}
-                                className="h-full w-full object-cover" alt="profil"
-                                onError={(e) => { e.target.src = "https://via.placeholder.com/150" }}
+                                className="h-full w-full object-cover"
+                                alt="profil"
+                                onError={(e) => {
+                                    e.target.src =
+                                        "https://via.placeholder.com/150";
+                                }}
                             />
                         ) : (
                             <span>
