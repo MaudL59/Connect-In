@@ -358,7 +358,8 @@ export default function Profil({ navigation, user, setUser }) {
                         ) : user.profile_photo_path ? (
                             <img
                                 src={
-                                    "https://www.google.com/search?q=http://127.0.0.1:8000/storage/%24{user.profile_photo_path}"
+                                    "http://127.0.0.1:8000/storage/" +
+                                    user.profile_photo_path
                                 }
                                 className="h-full w-full object-cover"
                             />
@@ -393,6 +394,15 @@ export default function Profil({ navigation, user, setUser }) {
                         </button>
                     </div>
                 </div>
+            </div>
+
+            <div>
+                <textarea
+                    placeholder="Décrivez vos missions ou vos domaines d'expertise"
+                    name="bio"
+                    id="bio"
+                    className="h-content border p-5 w-full rounded"
+                ></textarea>
             </div>
 
             <div className="flex justify-center">
