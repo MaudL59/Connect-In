@@ -430,16 +430,6 @@ export default function Profil({ navigation, user, setUser }) {
                             {user.first_name} {user.last_name}
                         </h2>
                     </div>
-
-                    <div className="mt-6 sm:mt-20 flex flex-col gap-2">
-                        <button
-                            onClick={() => navigation("messagerie")}
-                            // On change de page vers la messagerie
-                            className="bg-slate-800 hover:bg-slate-700 px-6 py-2 rounded-lg cursor-pointer font-semibold transition-all border border-slate-700"
-                        >
-                            Message
-                        </button>
-                    </div>
                 </div>
             </div>
 
@@ -448,7 +438,7 @@ export default function Profil({ navigation, user, setUser }) {
                     <span>
                         Ici décrivez vos missions ou vos domaines d'expertise
                     </span>
-                    <div className="flex w-full  gap gap-2 justify-center">
+                    <div className="flex flex-col w-full  gap gap-2 justify-center">
                         <textarea
                             placeholder="Ex: Je suis en ......, je m'occupe de ......, je me spécialise en ........."
                             name="bio"
