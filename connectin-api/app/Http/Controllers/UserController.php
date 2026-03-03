@@ -132,6 +132,7 @@ class UserController extends Controller
         // 200 = succés
     }
 
+    // fonction de supression de compte
     public function delete(Request $request, $id)
     {
         $user = $this->users->find($id);
@@ -141,6 +142,13 @@ class UserController extends Controller
         if (!$user) {
             return response()->json(['message' => 'Utilisateur introuvable'], 404);
             // erreur 404 Si on cherche un utilisateur qui n'existe plus.
+        }
+        // verifie si on a le bon mot de passe
+        if (!Hash::check($request->input('password'), $user->password)) {
+        return response()->json([
+            'message' => 'Mot de passe incorrect. Suppression annulée.'
+        ], 401); 
+        // 401 = Non autorisé
         }
 
         //  si un utilisaseur tente de suprimer le profil d'un autre on vérifie que c'est bien SON profil
