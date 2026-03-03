@@ -392,7 +392,7 @@ export default function Profil({ navigation, user, setUser }) {
                 <div className="px-30 -mt-12 flex flex-col items-center sm:items-start sm:flex-row sm:gap-6">
                     <div
                         onClick={() => fileInputRef.current.click()}
-                        className="h-32 w-32 cursor-pointer bg-slate-700 border-4 border-slate-950 rounded-full flex items-center justify-center overflow-hidden h text-4xl hover:bg-slate-600 font-bold shadow-2xl"
+                        className="h-32 w-32 cursor-pointer  border-4 border-slate-950 bg-slate-200 text-black rounded-full flex items-center justify-center overflow-hidden h text-4xl hover:bg-slate-600 font-bold shadow-2xl"
                     >
                         {preview ? (
                             <img
@@ -413,6 +413,7 @@ export default function Profil({ navigation, user, setUser }) {
                         ) : (
                             <span>
                                 {user.first_name?.charAt(0).toUpperCase()}
+                                {user.last_name?.charAt(0).toUpperCase()}
                             </span>
                         )}
 
