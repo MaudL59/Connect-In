@@ -356,6 +356,7 @@ export default function Profil({ navigation, user, setUser }) {
 
     return (
         <div className="min-h-screen bg-slate-950 text-white p-4">
+            {/* barre de navigation */}
             <header className="h-20 bg-blue-800 flex items-center justify-around text-xl font-bold rounded-lg">
                 <span
                     onClick={() => navigation("profil")}
@@ -384,7 +385,7 @@ export default function Profil({ navigation, user, setUser }) {
                     Déconnexion
                 </button>
             </header>
-            <div className="max-w-4xl mx-auto pb-20">
+            <div className="max-w-4xl mx-auto ">
                 {/* Bannière / Couverture */}
                 <div className="h-30 bg-gradient-to-r from-blue-900 to-slate-800 w-full rounded-b-xl"></div>
 
@@ -392,9 +393,10 @@ export default function Profil({ navigation, user, setUser }) {
                 <div className="px-30 -mt-12 flex flex-col items-center sm:items-start sm:flex-row sm:gap-6">
                     <div
                         onClick={() => fileInputRef.current.click()}
-                        className="h-32 w-32 cursor-pointer bg-slate-700 border-4 border-slate-950 rounded-full flex items-center justify-center overflow-hidden h text-4xl hover:bg-slate-600 font-bold shadow-2xl"
+                        className="h-32 w-32 cursor-pointer  border-4 border-slate-950 bg-slate-200 text-black rounded-full flex items-center justify-center overflow-hidden h text-4xl hover:bg-slate-600 font-bold shadow-2xl"
                     >
                         {preview ? (
+                            // l'image de profil
                             <img
                                 src={preview}
                                 className="h-full w-full object-cover"
@@ -411,8 +413,10 @@ export default function Profil({ navigation, user, setUser }) {
                                 }}
                             />
                         ) : (
+                            // si pas d'image les initials
                             <span>
                                 {user.first_name?.charAt(0).toUpperCase()}
+                                {user.last_name?.charAt(0).toUpperCase()}
                             </span>
                         )}
 
@@ -430,25 +434,16 @@ export default function Profil({ navigation, user, setUser }) {
                             {user.first_name} {user.last_name}
                         </h2>
                     </div>
-
-                    <div className="mt-6 sm:mt-20 flex flex-col gap-2">
-                        <button
-                            onClick={() => navigation("messagerie")}
-                            // On change de page vers la messagerie
-                            className="bg-slate-800 hover:bg-slate-700 px-6 py-2 rounded-lg cursor-pointer font-semibold transition-all border border-slate-700"
-                        >
-                            Message
-                        </button>
-                    </div>
                 </div>
             </div>
 
+            {/* champ pour la bio */}
             <div className="flex w-full  gap gap-2 justify-center">
                 <div className="flex flex-col">
                     <span>
                         Ici décrivez vos missions ou vos domaines d'expertise
                     </span>
-                    <div className="flex w-full  gap gap-2 justify-center">
+                    <div className="flex flex-col w-full  gap gap-2 justify-center">
                         <textarea
                             placeholder="Ex: Je suis en ......, je m'occupe de ......, je me spécialise en ........."
                             name="bio"
@@ -459,6 +454,7 @@ export default function Profil({ navigation, user, setUser }) {
                             readOnly={!isEditingBio}
                         ></textarea>
 
+                        {/* bouton pour modifier/enregistrer la bio */}
                         <button
                             onClick={handleSaveBio}
                             className="text-white cursor-pointer hover:text-red-600"
@@ -635,7 +631,7 @@ export default function Profil({ navigation, user, setUser }) {
                                 setConfirmationSuppression(true);
                             }}
                             className="
-                        text-red-600 border justify-center border-slate-700 px-2 flex text-center items-center w-50 cursor-pointer rounded mt-5 h-7 hover:text-red-500 
+                        text-red-600 border justify-center border-slate-600 px-2 bg-slate-300 flex text-center items-center w-50 cursor-pointer rounded mt-3 h-7 hover:text-red-500 hover:bg-slate-200 
                         "
                         >
                             Supprimer le compte
