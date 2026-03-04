@@ -258,7 +258,7 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
     return (
         <div className="min-h-screen bg-slate-950 text-white p-4">
             {/* Header */}
-            <header className="h-20 bg-blue-800 flex items-center justify-around text-xl font-bold mb-8 rounded-lg">
+            <header className="h-20 bg-blue-800 flex items-center justify-around max-md:text-sm text-xl font-bold mb-8 rounded-lg">
                 <span
                     onClick={() => navigation("profil")}
                     className="cursor-pointer hover:underline"

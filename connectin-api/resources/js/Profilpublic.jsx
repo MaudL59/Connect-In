@@ -19,7 +19,7 @@ export default function ProfilPublic({ user, navigation, setUser }) {
     return (
         <div className="min-h-screen bg-slate-950 text-white p-4">
             {/* Header avec bouton retour */}
-            <header className="h-20 bg-blue-800 flex items-center justify-around text-xl font-bold rounded-lg">
+            <header className="h-20 bg-blue-800 flex items-center justify-around max-md:text-sm text-xl font-bold mb-8 rounded-lg">
                 <div className="h-16 bg-blue-800 justify-center rounded w-80 flex  items-center px-4  sticky top-0 z-10">
                     <button
                         onClick={() => navigation("accueil")}
