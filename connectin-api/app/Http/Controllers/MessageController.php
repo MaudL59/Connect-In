@@ -37,20 +37,20 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validation des données reçues de React
+        //  Validation des données reçues de React
         $request->validate([
             'receiver_id' => 'required|exists:users,id',
             'content'     => 'required|string',
         ]);
 
-        // 2. Création du message
+        //  Création du message
         $message = Message::create([
             'sender_id'   => Auth::id(), // L'expéditeur est toujours l'utilisateur connecté
             'receiver_id' => $request->receiver_id,
             'content'     => $request->content,
         ]);
 
-        // 3. On renvoie le message créé pour que React puisse l'afficher de suite
+        //  On renvoie le message créé pour que React puisse l'afficher de suite
         return response()->json($message);
     }
 }
