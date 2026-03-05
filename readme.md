@@ -1,67 +1,107 @@
-Connect'In API - Backend Laravel
+# Connect'In API — Backend Laravel
 
-Bienvenue sur le backend de Connect'In, un réseau social développé avec Laravel. Cette API gère l'authentification, les publications, les commentaires et les interactions (likes).
+> Bienvenue sur le backend de **Connect'In**, un réseau social développé avec Laravel.  
+> Cette API gère l'authentification, les publications, les commentaires et les interactions (likes).
 
- Installation et Configuration
-Pour faire fonctionner ce projet sur votre machine locale, suivez ces étapes :
+---
 
-1. Cloner le projet et installer les dépendances
-Bash
+## Table des matières
+
+- [Installation et Configuration](#installation-et-configuration)
+- [Architecture de la Base de Données](#architecture-de-la-base-de-données)
+- [Tests API avec Postman](#tests-api-avec-postman)
+  - [Authentification](#1-authentification)
+  - [Gestion des Posts](#2-gestion-des-posts)
+  - [Commentaires et Likes](#3-commentaires-et-likes)
+  - [Utilisateurs (Profil)](#4-utilisateurs-profil)
+  - [Codes de Réponse HTTP](#5-codes-de-réponse-http)
+- [Stack Technique](#stack-technique)
+
+---
+
+## Installation et Configuration
+
+### 1. Cloner le projet et installer les dépendances
+
+```bash
 git clone <url-du-depot>
 cd connectin-api
 composer install
-2. Configuration de l'environnement
+```
+
+### 2. Configuration de l'environnement
+
 Copiez le fichier d'exemple et générez la clé d'application :
+
+```bash
 cp .env.example .env
 php artisan key:generate
+```
 
-Note : Il est important de modifier .env pour configurer vos accès à la base de données (DB_DATABASE, DB_USERNAME, DB_PASSWORD).
-3. Nettoyage et Optimisation
-Si vous rencontrez des problèmes de cache lors de l'installation :
+> ⚠️ **Important :** Modifiez le fichier `.env` pour configurer vos accès à la base de données :
+> `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`.
+
+### 3. Nettoyage et Optimisation
+
+En cas de problèmes de cache lors de l'installation :
+
+```bash
 php artisan optimize:clear
+```
 
-* Architecture de la Base de Données
-Ce projet utilise les migrations Laravel pour garantir une structure uniforme. Voici les tables principales créées :
-Tables Globales
+---
 
-- users : Gère les profils (nom, prénom, username, email, bio, photo de profil).
+## Architecture de la Base de Données
 
+Ce projet utilise les **migrations Laravel** pour garantir une structure uniforme.
 
-- posts : Contient les publications et gère l'auto-relation pour les commentaires via post_id.
+### Tables principales
 
-- likes : Gère les interactions entre utilisateurs et posts avec une contrainte d'unicité.
+| Table | Description |
+|---|---|
+| `users` | Profils utilisateurs (nom, prénom, username, email, bio, photo de profil) |
+| `posts` | Publications — gère l'auto-relation pour les commentaires via `post_id` |
+| `likes` | Interactions entre utilisateurs et posts, avec contrainte d'unicité |
+| `personal_access_tokens` | Table requise par Laravel Sanctum (authentification par token) |
 
-- personal_access_tokens : Table indispensable pour Laravel Sanctum (authentification par token).
+### Mise en place de la base de données
 
-Schéma des Migrations
-Pour mettre en place la base de données avec toutes les relations :
+```bash
 php artisan migrate:fresh
+```
 
-Important : Cette commande nettoie toutes les tables existantes et recrée la structure propre avec les champs username, bio et profile_photo que nous avons uniformisés.
+> ⚠️ **Important :** Cette commande **supprime toutes les tables existantes** et recrée la structure propre, incluant les champs `username`, `bio` et `profile_photo`.
 
+---
 
-* Tests API avec Postman
-Nous utilisons Postman pour valider nos routes CRUD et nos politiques de sécurité (Policies).
+## Tests API avec Postman
 
-Accéder à la collection
-Le fichier de configuration est inclus dans le projet pour faciliter la collaboration :
+📁 **Collection Postman :** [Télécharger](./docs/postman/My_Collection.postman_collection.json)
 
-Fichier : [Télécharger la collection Postman](./docs/postman/My_Collection.postman_collection.json)
+| Paramètre | Valeur |
+|---|---|
+| Base URL | `http://127.0.0.1:8000/api` |
+| Format | JSON |
+| Authentification | Bearer Token (via Laravel Sanctum) |
 
-Base URL : http://127.0.0.1:8000/api
-Format : JSON
-Authentification : Bearer Token (via Laravel Sanctum)
-1. Authentification
-Toutes les routes (sauf Register et Login) nécessitent d'envoyer le header suivant :
+---
 
-Authorization: Bearer {votre_token}
+### 1. Authentification
 
-Méthode	Route	Description	Body (JSON)
-POST	/register	Créer un compte	first_name, last_name, username, email, password, password_confirmation
-POST	/login	Se connecter	email, password
-POST	/logout	Déconnexion	Aucun
-exemple de  création d'un utilisateur via post man 
+> Toutes les routes (sauf `/register` et `/login`) nécessitent le header suivant :
+> ```
+> Authorization: Bearer {votre_token}
+> ```
 
+| Méthode | Route | Description | Body requis |
+|---|---|---|---|
+| `POST` | `/register` | Créer un compte | `first_name`, `last_name`, `username`, `email`, `password`, `password_confirmation` |
+| `POST` | `/login` | Se connecter | `email`, `password` |
+| `POST` | `/logout` | Se déconnecter | — |
+
+**Exemple — Création d'un compte (`POST /register`) :**
+
+```json
 {
     "message": "Utilisateur créé avec succès !",
     "user": {
@@ -78,25 +118,33 @@ exemple de  création d'un utilisateur via post man
     "access_token": "52|nB2ptGiASX08QRJeNsYO9dcCPPUXPNe3m2p2Kbt3637fc99c",
     "token_type": "Bearer"
 }
+```
 
-2. Gestion des Posts
+---
 
-Routes pour gérer le fil d'actualité.
+### 2. Gestion des Posts
 
-GET /posts : Récupère tous les posts (avec user, comments_count et likes_count).
+| Méthode | Route | Description |
+|---|---|---|
+| `GET` | `/posts` | Récupère tous les posts (avec `user`, `comments_count`, `likes_count`) |
+| `POST` | `/posts` | Crée un nouveau post |
+| `GET` | `/posts/{id}` | Récupère un post et ses commentaires |
+| `PUT` | `/posts/{id}` | Modifie un post *(auteur uniquement)* |
+| `DELETE` | `/posts/{id}` | Supprime un post *(auteur uniquement)* |
 
-POST /posts : Crée un nouveau post.
+**Body — Créer un post (`POST /posts`) :**
 
-Body : {"content": "Mon message", "image_path": null}
+```json
+{
+    "content": "Mon message",
+    "image_path": null
+}
+```
 
-GET /posts/{id} : Récupère les détails d'un post spécifique et ses commentaires.
+**Exemple — Réponse création (`201 Created`) :**
 
-PUT /posts/{id} : Modifie un post (Seulement si vous êtes l'auteur).
-
-DELETE /posts/{id} : Supprime un post.
-
-exemple via Postman
- {
+```json
+{
     "message": "Post ajouté avec succès !",
     "post": {
         "id": 15,
@@ -110,8 +158,12 @@ exemple via Postman
         "created_at": "il y a 0 seconde"
     }
 }
- . modification du post 
- {
+```
+
+**Exemple — Réponse modification (`PUT /posts/{id}`) :**
+
+```json
+{
     "message": "Post mis à jour avec succès !",
     "data": {
         "id": 15,
@@ -123,21 +175,40 @@ exemple via Postman
         "updated_at": "2026-03-03T10:03:18.000000Z"
     }
 }
-. suppréssion de post 
+```
+
+**Exemple — Réponse suppression (`DELETE /posts/{id}`) :**
+
+```json
 {
     "message": "Post supprimé avec succès !",
     "deleted_at": "03 mars 2026 10:05"
 }
+```
 
+---
 
- 3. Commentaires &  Likes       
-Actions sociales sur les posts.
-* Commentaires 
-- POST /comments : Ajouter un commentaire à un post.
-. body : {
-   "post_id": 14, "content": "Super post !"  
+### 3. Commentaires et Likes
+
+#### 💬 Commentaires
+
+| Méthode | Route | Description |
+|---|---|---|
+| `POST` | `/comments` | Ajouter un commentaire à un post |
+| `DELETE` | `/comments/{id}` | Supprimer un commentaire *(auteur uniquement)* |
+
+**Body — Ajouter un commentaire (`POST /comments`) :**
+
+```json
+{
+    "post_id": 14,
+    "content": "Super post !"
 }
-exemple  via postman 
+```
+
+**Exemple — Réponse (`201 Created`) :**
+
+```json
 {
     "content": "Super post !",
     "post_id": 14,
@@ -146,49 +217,67 @@ exemple  via postman
     "created_at": "2026-03-03T10:11:46.000000Z",
     "id": 13
 }
-- DELETE /comments/{id} : Supprime un commentaire.
-exemple via postman 
+```
+
+**Exemple — Suppression (`DELETE /comments/{id}`) :**
+
+```json
 {
-    "message": "Commentaire supprimé avec succé!"
+    "message": "Commentaire supprimé avec succès !"
 }
+```
 
-* likes
-- POST /likes : Liker un post.
+#### ❤️ Likes
 
-. Body : {"post_id": 14}
-exemple via postman 
+| Méthode | Route | Description |
+|---|---|---|
+| `POST` | `/likes` | Liker un post |
+| `DELETE` | `/likes/{id}` | Retirer un like (Unlike) |
+
+**Body — Liker un post (`POST /likes`) :**
+
+```json
 {
-    "message": "C'est Liké!"
+    "post_id": 14
 }
+```
 
-- DELETE /likes/{id} : Retirer un like (Unlike).
+**Exemple — Réponse (`200 OK`) :**
 
-4. Utilisateurs (Profil)
+```json
+{
+    "message": "C'est Liké !"
+}
+```
 
-- GET /user : Récupère les infos de l'utilisateur actuellement connecté (via le Token).
+---
 
-- PUT /users/{id} : Met à jour les informations du profil (bio, username, profile_photo).
+### 4. Utilisateurs (Profil)
 
-5. Codes de Réponse (Status Codes)
-Voici les codes que l'API renvoie couramment :
+| Méthode | Route | Description |
+|---|---|---|
+| `GET` | `/user` | Récupère les infos de l'utilisateur connecté (via le token) |
+| `PUT` | `/users/{id}` | Met à jour le profil (`bio`, `username`, `profile_photo`) |
 
-- 200 OK : Succès.
+---
 
-- 201 Created : Ressource créée avec succès (ex: après un Register ou Post).
+### 5. Codes de Réponse HTTP
 
-- 401 Unauthorized : Token manquant ou invalide.
+| Code | Statut | Description |
+|---|---|---|
+| `200` | OK | Requête réussie |
+| `201` | Created | Ressource créée avec succès (ex: Register, nouveau post) |
+| `401` | Unauthorized | Token manquant ou invalide |
+| `403` | Forbidden | Action non autorisée sur cette ressource |
+| `422` | Unprocessable Entity | Erreur de validation (ex: email déjà pris, mot de passe trop court) |
 
-- 403 Forbidden : Vous n'avez pas le droit de modifier/supprimer cette ressource.
+---
 
-- 422 Unprocessable Entity : Erreur de validation (ex: email déjà pris ou mot de passe trop court).
+## Stack Technique
 
-* Stack Technique
-
-- Framework : Laravel 11
-
-- Authentification : Laravel Sanctum
-
-- Base de données : MySQL / MariaDB
-
-- Frontend (Tests) : React , Taildwin css 
-
+| Composant | Technologie |
+|---|---|
+| Framework Backend | Laravel 11 |
+| Authentification | Laravel Sanctum |
+| Base de données | MySQL / MariaDB |
+| Frontend (Tests) | React + Tailwind CSS |
