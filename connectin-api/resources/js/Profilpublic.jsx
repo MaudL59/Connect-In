@@ -21,7 +21,7 @@ export default function ProfilPublic({ user, navigation, setUser }) {
             {/* Header avec bouton retour */}
             <header className="h-20 bg-blue-800 flex items-center justify-around max-md:text-sm text-xl font-bold mb-8 rounded-lg">
                 <h1 className="font-semibold max-md:text-sm  text-center rounded-full bg-blue-900 p-2 text-lg">
-                    Profil de {user.first_name}
+                    Profil {user.first_name}
                 </h1>
 
                 <span
