@@ -281,3 +281,55 @@ php artisan migrate:fresh
 | Authentification | Laravel Sanctum |
 | Base de données | MySQL / MariaDB |
 | Frontend (Tests) | React + Tailwind CSS |
+
+
+# Connect'In API — Frontend React
+
+
+Interface utilisateur de Connect'In, le réseau social moderne.
+
+Ce client communique avec l'API Laravel pour offrir une expérience fluide de
+ partage et d'interaction en temps réel.
+
+ ## Table des matières
+
+ - [ Aperçu du projet]
+
+- [Installation et Lancement]
+
+- [Configuration de l'API]
+
+- [Structure des Composants]
+
+- [Fonctionnalités Clés]
+
+- [Stack Technique]
+
+## Aperçu du projet
+
+
+Connect'In permet aux utilisateurs de :
+
+ Gérer leur profil (Bio, photo, informations personnelles).
+
+ Envois des messages.
+
+ Interagir via des commentaires et des likes.
+
+ Naviguer de façon sécurisée grâce à l'authentification par Token.
+
+## Installation et Lancement
+
+git clone <url-du-depot-frontend>
+
+<!-- pour l'installation de react -->
+`npm install`
+
+<!-- pour le lancement de du serveur, on le fait dans dans deux terminal different  -->
+
+`php artisan serve`
+`npm run dev`
+
+# Configuration de l'environnement
+
+
