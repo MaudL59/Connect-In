@@ -362,7 +362,7 @@ export default function Profil({ navigation, user, setUser }) {
                     onClick={() => navigation("profil")}
                     className="cursor-pointer bg-blue-900 mr-4 hover:bg-blue-700 mr-4 p-2 shadow rounded-full rounded-full"
                 >
-                    Profil de {user.first_name} {user.last_name}
+                    Profil {user.first_name} {user.last_name}
                 </span>
                 <span
                     onClick={() => navigation("accueil")}
