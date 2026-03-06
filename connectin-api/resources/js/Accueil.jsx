@@ -261,13 +261,13 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
             <header className="h-20 bg-blue-800 flex items-center justify-around max-md:text-sm text-xl font-bold mb-8 rounded-lg">
                 <span
                     onClick={() => navigation("profil")}
-                    className="cursor-pointer hover:underline"
+                    className="cursor-pointer mr-4 bg-blue-700 hover:bg-blue-600 p-2 shadow rounded-full"
                 >
-                    Bienvenue, {user.first_name} {user.last_name} !
+                    Profil de {user.first_name} {user.last_name}
                 </span>
                 <span
                     onClick={() => navigation("accueil")}
-                    className="cursor-pointer hover:underline"
+                    className="cursor-pointer bg-blue-900 mr-4 hover:bg-blue-700 p-2 shadow rounded-full"
                 >
                     CONNECT'IN
                 </span>
@@ -277,7 +277,7 @@ export default function Accueil({ navigation, user, setUser, setVisitedUser }) {
                         setUser?.({ first_name: "", last_name: "", email: "" });
                         navigation("login");
                     }}
-                    className="cursor-pointer hover:underline"
+                    className="cursor-pointer mr-4 bg-blue-700 hover:bg-blue-600 p-2 shadow rounded-full"
                 >
                     Déconnexion
                 </button>

@@ -20,20 +20,13 @@ export default function ProfilPublic({ user, navigation, setUser }) {
         <div className="min-h-screen bg-slate-950 text-white p-4">
             {/* Header avec bouton retour */}
             <header className="h-20 bg-blue-800 flex items-center justify-around max-md:text-sm text-xl font-bold mb-8 rounded-lg">
-                <div className="h-16 bg-blue-800 justify-center rounded w-80 flex  items-center px-4  sticky top-0 z-10">
-                    <button
-                        onClick={() => navigation("accueil")}
-                        className="mr-4 cursor-pointer hover:bg-blue-700 p-2 rounded-full transition-colors"
-                    >
-                        ← Retour
-                    </button>
-                    <h1 className="font-semibold text-lg">
-                        Profil de {user.first_name}
-                    </h1>
-                </div>
+                <h1 className="font-semibold max-md:text-sm  text-center rounded-full bg-blue-900 p-2 text-lg">
+                    Profil de {user.first_name}
+                </h1>
+
                 <span
                     onClick={() => navigation("accueil")}
-                    className="cursor-pointer hover:underline"
+                    className="cursor-pointer mr-4 bg-blue-700 hover:bg-blue-600 p-2 shadow rounded-full"
                 >
                     CONNECT'IN
                 </span>
@@ -47,7 +40,7 @@ export default function ProfilPublic({ user, navigation, setUser }) {
                         });
                         navigation("login");
                     }}
-                    className="cursor-pointer hover:underline"
+                    className="cursor-pointer mr-4 bg-blue-700 hover:bg-blue-600 p-2 shadow rounded-full"
                 >
                     Déconnexion
                 </button>
@@ -90,7 +83,7 @@ export default function ProfilPublic({ user, navigation, setUser }) {
                         </button> */}
                         <button
                             onClick={() => navigation("messagerie")} // On change de page vers la messagerie
-                            className="bg-slate-800 hover:bg-slate-700 px-6 py-2 rounded-lg font-semibold transition-all border border-slate-700"
+                            className="bg-slate-800 hover:bg-slate-700 px-6 py-2 cursor-pointer rounded-lg font-semibold transition-all border border-slate-700"
                         >
                             Message
                         </button>
@@ -119,7 +112,7 @@ export default function ProfilPublic({ user, navigation, setUser }) {
                     </div>
 
                     {/* Colonne Droite : Bio de l'utilisateur */}
-                    <div className="bg-slate-900  w-110 p-8 rounded-xl border break-words border-slate-800 ">
+                    <div className="bg-slate-900 max-md:w-auto w-110 p-8 rounded-xl border break-words border-slate-800 ">
                         {user.bio ? (
                             <p className="text-slate-300 text-left whitespace-pre-line">
                                 {user.bio}
