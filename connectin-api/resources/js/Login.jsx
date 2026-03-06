@@ -52,11 +52,11 @@ export default function Login({ navigation, setUser }) {
             <h1 className="h-20 text-white bg-blue-800 flex items-center justify-center text-xl font-semibold w-full">
                 CONNECT'IN
             </h1>
-            <div className="flex-1 flex items-center gap gap-2 justify-evenly">
+            <div className="flex-1 flex flex-row max-md:flex-col items-center gap gap-2 justify-evenly">
                 <img
                     src={logoUrl}
                     alt="logo connectin"
-                    className="h-90 border border-black"
+                    className="h-90 max-md:h-50 border border-black"
                 />
                 <div className="bg-slate-900 p-8 rounded-xl shadow-xl border border-slate-800 w-full max-w-md">
                     <h2 className="text-2xl font-extralight text-white mb-6 text-center">

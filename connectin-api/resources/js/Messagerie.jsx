@@ -57,9 +57,9 @@ export default function Messagerie({ user, userVisite, navigation }) {
             <div className="h-16 bg-blue-800 flex items-center px-4 shadow-lg sticky top-0 z-10">
                 <button
                     onClick={() => navigation("ProfilPublic")}
-                    className="mr-4 hover:bg-blue-700 p-2 rounded-full"
+                    className="mr-4 bg-blue-700 hover:bg-blue-600 p-2 shadow cursor-pointer rounded-full"
                 >
-                    ←
+                    ← Retour
                 </button>
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center font-bold uppercase">

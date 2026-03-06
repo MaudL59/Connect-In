@@ -360,13 +360,13 @@ export default function Profil({ navigation, user, setUser }) {
             <header className="h-20 bg-blue-800 flex items-center justify-around max-md:text-sm text-xl font-bold mb-8 rounded-lg">
                 <span
                     onClick={() => navigation("profil")}
-                    className="cursor-pointer hover:underline"
+                    className="cursor-pointer bg-blue-900 mr-4 hover:bg-blue-700 mr-4 p-2 shadow rounded-full rounded-full"
                 >
-                    Bienvenue, {user.first_name} {user.last_name} !
+                    Profil de {user.first_name} {user.last_name}
                 </span>
                 <span
                     onClick={() => navigation("accueil")}
-                    className="cursor-pointer hover:underline"
+                    className="cursor-pointer mr-4 bg-blue-700 hover:bg-blue-600 p-2 shadow rounded-full"
                 >
                     CONNECT'IN
                 </span>
@@ -380,7 +380,7 @@ export default function Profil({ navigation, user, setUser }) {
                         });
                         navigation("login");
                     }}
-                    className="hover:underline"
+                    className="mr-4 bg-blue-700 hover:bg-blue-600 p-2 shadow rounded-full cursor-pointer"
                 >
                     Déconnexion
                 </button>
@@ -438,17 +438,17 @@ export default function Profil({ navigation, user, setUser }) {
             </div>
 
             {/* champ pour la bio */}
-            <div className="flex w-full  gap gap-2 justify-center">
+            <div className="flex   gap gap-2  justify-center">
                 <div className="flex flex-col">
                     <span>
                         Ici décrivez vos missions ou vos domaines d'expertise
                     </span>
-                    <div className="flex flex-col w-full  gap gap-2 justify-center">
+                    <div className="flex flex-col w-full gap gap-2 justify-center">
                         <textarea
                             placeholder="Ex: Je suis en ......, je m'occupe de ......, je me spécialise en ........."
                             name="bio"
                             id="bio"
-                            className="h-content border border-slate-700  bg-slate-900 p-5 w-100 mt-5 rounded"
+                            className="h-content border border-slate-700  bg-slate-900 p-5 w-auto mt-5 rounded"
                             value={tempBio}
                             onChange={(e) => setTempBio(e.target.value)}
                             readOnly={!isEditingBio}
