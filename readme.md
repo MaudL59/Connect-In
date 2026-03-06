@@ -282,7 +282,7 @@ php artisan migrate:fresh
 | Base de données | MySQL / MariaDB |
 | Frontend (Tests) | React + Tailwind CSS |
 
-
+<!-- partie frontend -->
 # Connect'In API — Frontend React
 
 
@@ -332,4 +332,14 @@ git clone <url-du-depot-frontend>
 
 # Configuration de l'environnement
 
+Créez un fichier .env à la racine du projet pour lier le frontend au backend :
 
+`VITE_API_BASE_URL=http://127.0.0.1:8000/api`
+
+# Stack Technique
+
+React 18 | Bibliothèque UI principale
+
+Tailwind CSS | Framework CSS utilitaire pour le design
+
+React Router | Gestion de la navigation (SPA)
