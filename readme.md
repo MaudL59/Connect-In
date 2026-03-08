@@ -280,11 +280,9 @@ php artisan migrate:fresh
 | Framework Backend | Laravel 11 |
 | Authentification | Laravel Sanctum |
 | Base de données | MySQL / MariaDB |
-| Frontend (Tests) | React + Tailwind CSS |
 
 <!-- partie frontend -->
 # Connect'In API — Frontend React
-
 
 Interface utilisateur de Connect'In, le réseau social moderne.
 
@@ -293,20 +291,15 @@ Ce client communique avec l'API Laravel pour offrir une expérience fluide de
 
  ## Table des matières
 
- - [ Aperçu du projet]
+ - [ Aperçu du projet](##-Aperçu-du-projet)
 
-- [Installation et Lancement]
+- [Configuration de l'API](##-Configuration-de-l'environnement)
 
-- [Configuration de l'API]
+- [Installation et Lancement](##-Installation-et-Lancement)
 
-- [Structure des Composants]
-
-- [Fonctionnalités Clés]
-
-- [Stack Technique]
+- [Stack Technique](##-Stack-Technique)
 
 ## Aperçu du projet
-
 
 Connect'In permet aux utilisateurs de :
 
@@ -318,25 +311,22 @@ Connect'In permet aux utilisateurs de :
 
  Naviguer de façon sécurisée grâce à l'authentification par Token.
 
-## Installation et Lancement
-
-git clone <url-du-depot-frontend>
-
-<!-- pour l'installation de react -->
-`npm install`
-
-<!-- pour le lancement de du serveur, on le fait dans dans deux terminal different  -->
-
-`php artisan serve`
-`npm run dev`
-
-# Configuration de l'environnement
+## Configuration de l'environnement
 
 Créez un fichier .env à la racine du projet pour lier le frontend au backend :
 
 `VITE_API_BASE_URL=http://127.0.0.1:8000/api`
 
-# Stack Technique
+## Installation et Lancement
+
+Après avoir clôné le projet et configuer le backend (API), se rendre dans le repertoire `connectin-api/` et tapper les commande suivantes :
+
+- `npm install`: pour l'installation des dependances
+
+- `php artisan serve` et `npm run dev` : pour le lancement du serveur de l'API et du Client front, on le fait dans dans deux terminaux différents
+
+
+## Stack Technique
 
 React 18 | Bibliothèque UI principale
 
