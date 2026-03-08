@@ -43,52 +43,58 @@ class PostController extends Controller
                 'content' => $post->content,
                 'image_path' => $post->image_path,
 
-                // Auteur du post
-                'user' => [
-                    'id' => $post->user->id ?? null,
-                    'name' => $post->user->full_name ?? null,
-                    'avatar' => $post->user->profile_photo_url ?? null,
+               
+                // Auteur du post avec sécurité si l'user est NULL
+                'user' => $post->user ? [
+                'id' => $post->user->id,
+                'name' => $post->user->full_name,
+                'avatar' => $post->user->profile_photo_url,
+                ] : [
+                'id' => null,
+                'name' => "Utilisateur supprimé",
+                'avatar' => null,
+                 ],
+
+                'comments_count' => $post->comments_count ?? 0, 
+                'likes_count' => $post->likes_count ?? 0,
+
+                'comments' => $post->comments ? $post->comments->map(function ($comment) {
+            return [
+                'id' => $comment->id,
+                'content' => $comment->content,
+                'user' => $comment->user ? [
+                'id' => $comment->user->id,
+                'name' => $comment->user->full_name,
+                ] : [
+                'id' => null,
+                'name' => "Anonyme"
                 ],
-
-                // Nombre de commentaires et likes
-                'comments_count' => $post->comments->count(),
-                'likes_count' => $post->likes->count(),
-                // on renvoie tous les commentaires sur un post 
-                'comments' => $post->comments->map(function ($comment) {
-                    return [
-                        'id'      => $comment->id,
-                        'content' => $comment->content,
-                        'user'    => [
-                            'id'   => $comment->user->id ?? null,
-                            'name' => $comment->user->full_name ?? null,
-                        ],
-                    ];
-                }),
-
-                // Date lisible en français
-                'created_at' => Carbon::parse($post->created_at)->diffForHumans()
             ];
-        });
+        }) : [],
+
+    'created_at' => $post->created_at ? \Carbon\Carbon::parse($post->created_at)->diffForHumans() : "Maintenant"
+    ];
+});
 
         return response()->json($formattedPosts, 200);
     }
 
     public function update(Request $request, $id)
     {
-        // 1. Trouver le post ou renvoyer une erreur 404
+        //  Trouver le post ou renvoyer une erreur 404
         $post = Post::findOrFail($id);
 
-        // 2. Valider les données reçues
+        //  Valider les données reçues
         $validated = $request->validate([
             'content' => 'sometimes|string',
             'image_path' => 'sometimes|nullable|string',
             'post_id' => 'sometimes|nullable|exists:posts,id'
         ]);
 
-        // 3. Mettre à jour
+        //  Mettre à jour
         $post->update($validated);
 
-        // 4. Retourner le post mis à jour
+        //  Retourner le post mis à jour
         return response()->json([
             'message' => 'Post mis à jour avec succès !',
             'data' => $post
@@ -128,37 +134,44 @@ class PostController extends Controller
         return response()->json([
             'message' => 'Post ajouté avec succès !',
             'post' => [
-                'id' => $post->id,
-                'content' => $post->content,
-                'image_path' => $post->image_path, // url de l'image contenu dans le post 
-                'user' => [
-                    'id' => $post->user->id,
-                    'name' => $post->user->full_name,
-                    'avatar' => $post->user->profile_photo_url
-                ],
-                'created_at' => Carbon::parse($post->created_at)->diffForHumans()
+            'id' => $post->id,
+            'content' => $post->content,
+            'image_path' => $post->image_path, // url de l'image contenu dans le post 
+            'user' => $post->user ? [
+                'id' => $post->user->id,
+                'name' => $post->user->full_name,
+                'avatar' => $post->user->profile_photo_url
+            ] : [
+                'id' => null,
+                'name' => "Utilisateur inconnu",
+                'avatar' => null
+            ],
+            'created_at' => $post->created_at ? \Carbon\Carbon::parse($post->created_at)->diffForHumans() : "Maintenant"
             ]
         ], 201); // 201 = Création réussie
     }
     // Fonction pour récupérer UN post spécifique par son ID
     public function show($id)
     {
-        // 1. On récupère le post via le repository
+        //  On récupère le post via le repository
         $post = $this->posts->find($id);
 
-        // 2. Vérification si le post existe
+        //  Vérification si le post existe
         if (!$post) {
             return response()->json(['message' => 'Post introuvable'], 404);
         }
 
-        // 3. On formate les données (comme dans ton index)
+        //  On formate les données (comme dans ton index)
         $formattedPost = [
             'id' => $post->id,
             'content' => $post->content,
             'image_path' => $post->image_path,
-            'user' => [
-                'id' => $post->user->id ?? null,
-                'name' => $post->user->full_name ?? null
+            'user' => $post->user ? [
+            'id' => $post->user->id,
+            'name' => $post->user->full_name,
+                ] : [
+            'id' => null,
+            'name' => "Anonyme"
             ],
             // Chargement des relations pour voir les commentaires et likes liés
             'comments' => $post->comments,
@@ -202,7 +215,7 @@ class PostController extends Controller
 
         $post = $this->posts->find($id);
 
-        // 1. Vérifie si le post existe (pour éviter un crash)
+        //  Vérifie si le post existe (pour éviter un crash)
         if (!$post) {
             return response()->json(['message' => 'Post introuvable'], 404);
             // erreur 404 Si on cherche un post qui n'existe plus.

@@ -6,7 +6,7 @@ export default function Inscription({ navigation, setUser }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [error, setError] = useState(""); 
+    const [error, setError] = useState("");
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -37,22 +37,21 @@ export default function Inscription({ navigation, setUser }) {
 
             if (response.ok) {
                 alert("Inscription réussie !");
-                
+
                 // --- CORRECTIONS POUR LA PERSISTANCE ---
-                
-                // 1. On met à jour l'utilisateur dans l'état React
+
+                //  On met à jour l'utilisateur dans l'état React
                 setUser(data.user);
-                
-                // 2. On utilise "access_token" (et non "token") pour que App.js le reconnaisse
+
+                //  On utilise "access_token" (et non "token") pour que App.js le reconnaisse
                 localStorage.setItem("access_token", data.access_token);
-                
-                // 3. On enregistre les infos de l'utilisateur en texte (JSON)
+
+                //  On enregistre les infos de l'utilisateur en texte (JSON)
                 // C'est ce qui évite qu'Aminata ne revienne à l'actualisation !
                 localStorage.setItem("user_data", JSON.stringify(data.user));
-                
-                // 4. On redirige vers l'accueil
+
+                //  On redirige vers l'accueil
                 navigation("accueil");
-                
             } else {
                 setError(data.message || "L'inscription a échoué.");
                 console.log("Erreurs du serveur :", data.errors);
@@ -87,7 +86,9 @@ export default function Inscription({ navigation, setUser }) {
                         className="flex flex-col gap-4"
                     >
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">Nom</label>
+                            <label className="text-slate-300 text-sm">
+                                Nom
+                            </label>
                             <input
                                 type="text"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -99,7 +100,9 @@ export default function Inscription({ navigation, setUser }) {
                         </div>
 
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">Prénom</label>
+                            <label className="text-slate-300 text-sm">
+                                Prénom
+                            </label>
                             <input
                                 type="text"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -111,7 +114,9 @@ export default function Inscription({ navigation, setUser }) {
                         </div>
 
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">Email</label>
+                            <label className="text-slate-300 text-sm">
+                                Email
+                            </label>
                             <input
                                 type="email"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 "
@@ -123,7 +128,9 @@ export default function Inscription({ navigation, setUser }) {
                         </div>
 
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">Mot de passe</label>
+                            <label className="text-slate-300 text-sm">
+                                Mot de passe
+                            </label>
                             <input
                                 type="password"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -135,7 +142,9 @@ export default function Inscription({ navigation, setUser }) {
                         </div>
 
                         <div className="flex flex-col gap-1">
-                            <label className="text-slate-300 text-sm">Confirmer le mot de passe</label>
+                            <label className="text-slate-300 text-sm">
+                                Confirmer le mot de passe
+                            </label>
                             <input
                                 type="password"
                                 className="bg-slate-800 border border-slate-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 "
@@ -150,7 +159,7 @@ export default function Inscription({ navigation, setUser }) {
 
                         <button
                             type="submit"
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition-colors mt-2"
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 cursor-pointer rounded-lg transition-colors mt-2"
                         >
                             S'inscrire
                         </button>

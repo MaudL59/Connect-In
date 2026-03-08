@@ -24,7 +24,7 @@ class PostRepositoryInterfaceTest extends TestCase
     #[Test] // Utilisation de l'attribut au lieu de /** @test */
     public function it_should_create_a_new_post_in_database()
     {
-        // 1. ARRANGEMENT : Créer un vrai utilisateur via sa Factory
+        //  ARRANGEMENT : Créer un vrai utilisateur via sa Factory
         $user = User::factory()->create();
         $user = User::factory()->create([
         'first_name' => 'Aurelien',
@@ -37,10 +37,10 @@ class PostRepositoryInterfaceTest extends TestCase
             'user_id' => $user->id, // On utilise l'ID généré dynamiquement
         ];
 
-        // 2. ACTION
+        //  ACTION
         $createdPost = $this->postRepository->create($postData);
 
-        // 3. ASSERTION
+        //  ASSERTION
         $this->assertInstanceOf(Post::class, $createdPost);
         $this->assertDatabaseHas('posts', [
             'content'   => 'Ceci est un test de contenu pour notre API.',
@@ -51,7 +51,7 @@ class PostRepositoryInterfaceTest extends TestCase
     #[Test]
      public function it_should_update_an_existing_post()
     {
-    // 1. ARRANGEMENT
+    //  ARRANGEMENT
     $user = User::factory()->create(['first_name' => 'Aurelien']);
     // On crée un post initial
     $post = Post::create([
@@ -63,10 +63,10 @@ class PostRepositoryInterfaceTest extends TestCase
         'content' => 'Contenu mis à jour par le test'
     ];
 
-    // 2. ACTION
+    //  ACTION
     $updatedPost = $this->postRepository->update($post->id, $updatedData);
 
-    // 3. ASSERTION
+    //  ASSERTION
     $this->assertEquals('Contenu mis à jour par le test', $updatedPost->content);
     $this->assertDatabaseHas('posts', [
         'id' => $post->id,
@@ -77,17 +77,17 @@ class PostRepositoryInterfaceTest extends TestCase
     #[Test]
    public function it_should_delete_a_post()
    {
-    // 1. ARRANGEMENT
+    //  ARRANGEMENT
     $user = User::factory()->create(['first_name' => 'Aurelien']);
     $post = Post::create([
         'content' => 'Post à supprimer',
         'user_id' => $user->id
     ]);
 
-    // 2. ACTION
+    //  ACTION
     $this->postRepository->delete($post->id);
 
-    // 3. ASSERTION
+    //  ASSERTION
     // On vérifie que la ligne n'existe plus dans la table 'posts'
     $this->assertDatabaseMissing('posts', [
         'id' => $post->id

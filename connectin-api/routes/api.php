@@ -8,6 +8,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthentificationController;
+use App\Http\Controllers\MessageController;
 
 //  ROUTES PUBLIQUES (Accessibles sans token)
 Route::post('/register', [AuthentificationController::class, 'register']);
@@ -37,9 +38,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthentificationController::class, 'logout']);
 
     // pour les utilisateurs
-   Route::get('/users/search', [UserController::class, 'search']); //  RECHERCHE
+    Route::get('/users/search', [UserController::class, 'search']); //  RECHERCHE
     Route::post('/users', [UserController::class, 'add']);
     Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::post('/users/{id}', [UserController::class, 'update']);
     Route::put('/users/{id}', [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'delete']);
 
@@ -60,4 +62,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/likes', [LikeController::class, 'save']);
     Route::delete('/likes/{id}', [LikeController::class, 'delete']);
     Route::get('/likes', [LikeController::class, 'index']);
+
+// pour les messages
+
+    Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/messages/{receiver_id}', [MessageController::class, 'index']);
+    Route::post('/messages', [MessageController::class, 'store']);
+
+});
 });

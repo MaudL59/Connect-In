@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void // cette fonction permet à l'utilisation de supprimer que ces propres posts
+    public function boot(): void // cette fonction permet à gerer les autorisations de l'utilisateur
     {
         
         Gate::define('update-post', function ($user, $post) {

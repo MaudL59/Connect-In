@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import logoUrl from "../asset/logoConnectin.png";
 export default function Login({ navigation, setUser }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -25,18 +25,18 @@ export default function Login({ navigation, setUser }) {
             const data = await response.json();
 
             if (response.ok) {
-                // 1. On stocke le token pour rester connecté
+                //  On stocke le token pour rester connecté
                 localStorage.setItem("access_token", data.access_token);
 
-                // 2. CORRECTION CRITIQUE : On stocke les infos de l'utilisateur
+                //  CORRECTION CRITIQUE : On stocke les infos de l'utilisateur
                 // Sans cette ligne, App.js reprend les vieilles infos (Aminata) au rafraîchissement
                 localStorage.setItem("user_data", JSON.stringify(data.user));
 
-                // 3. On met à jour l'état actuel de l'application
+                //  On met à jour l'état actuel de l'application
                 setUser(data.user);
 
                 alert("Connexion réussie !");
-                navigation("accueil"); 
+                navigation("accueil");
             } else {
                 setError(data.message || "Email ou mot de passe invalide.");
             }
@@ -52,7 +52,12 @@ export default function Login({ navigation, setUser }) {
             <h1 className="h-20 text-white bg-blue-800 flex items-center justify-center text-xl font-semibold w-full">
                 CONNECT'IN
             </h1>
-            <div className="flex-1 flex items-center justify-center">
+            <div className="flex-1 flex flex-row max-md:flex-col items-center gap gap-2 justify-evenly">
+                <img
+                    src={logoUrl}
+                    alt="logo connectin"
+                    className="h-90 max-md:h-50 border border-black"
+                />
                 <div className="bg-slate-900 p-8 rounded-xl shadow-xl border border-slate-800 w-full max-w-md">
                     <h2 className="text-2xl font-extralight text-white mb-6 text-center">
                         Connexion
@@ -98,7 +103,7 @@ export default function Login({ navigation, setUser }) {
 
                         <button
                             type="submit"
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition-colors mt-2"
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 cursor-pointer rounded-lg transition-colors mt-2"
                         >
                             Se connecter
                         </button>

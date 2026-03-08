@@ -26,6 +26,7 @@ class User extends Authenticatable
         'password',
         'is_connected',
         'profile_photo_path',
+        'bio',
     ]; // ce sont les veriables necessitant l'accès à un utilisateur
 
     /**
@@ -76,7 +77,10 @@ class User extends Authenticatable
 
     public function getFullNameAttribute()
     {
-        return "{$this->first_name} {$this->last_name}"; // cette fonction permet de recuperer le nom et prénom complet de l'utilisateur
+        // On retire les espaces inutiles au cas où un champ est vide
+        $fullName = trim("{$this->first_name} {$this->last_name}");
+        return $fullName ?: "Utilisateur supprimé"; 
+        
     }
     // Ajoute cette fonction pour avoir l'URL de la photo directement
     public function getProfilePhotoUrlAttribute()

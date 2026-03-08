@@ -18,10 +18,9 @@ return new class extends Migration
             $table->text('content');
 
             // L'utilisateur qui écrit le commentaire
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
 
-            // Le post auquel appartient le commentaire
-            $table->foreignId('post_id')->nullable()->constrained('posts')->onDelete('cascade');            // le post peut contenir une image
+            // le post peut contenir une image
             $table->string('image_path')->nullable();
 
             $table->timestamps();
