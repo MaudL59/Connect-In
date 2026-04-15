@@ -47,7 +47,7 @@ export default function Inscription({ navigation, setUser }) {
                 localStorage.setItem("access_token", data.access_token);
 
                 //  On enregistre les infos de l'utilisateur en texte (JSON)
-                // C'est ce qui évite qu'Aminata ne revienne à l'actualisation !
+
                 localStorage.setItem("user_data", JSON.stringify(data.user));
 
                 //  On redirige vers l'accueil

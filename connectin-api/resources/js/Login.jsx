@@ -29,7 +29,7 @@ export default function Login({ navigation, setUser }) {
                 localStorage.setItem("access_token", data.access_token);
 
                 //  CORRECTION CRITIQUE : On stocke les infos de l'utilisateur
-                // Sans cette ligne, App.js reprend les vieilles infos (Aminata) au rafraîchissement
+                
                 localStorage.setItem("user_data", JSON.stringify(data.user));
 
                 //  On met à jour l'état actuel de l'application
